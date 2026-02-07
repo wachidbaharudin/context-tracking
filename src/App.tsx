@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useAutomerge, useContexts, useOnlineStatus } from '@/hooks';
 import { ContextList, ContextDetail, CreateContextModal } from '@/components/features/contexts';
+import { POCDashboard } from '@/poc';
 
 function App() {
   const { doc, isLoading, error, changeDoc } = useAutomerge();
   const isOnline = useOnlineStatus();
   const [selectedContextId, setSelectedContextId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showPOC, setShowPOC] = useState(false);
 
   const {
     ongoingContexts,
@@ -56,6 +58,11 @@ function App() {
     );
   }
 
+  // Show POC Dashboard when toggled
+  if (showPOC) {
+    return <POCDashboard onBack={() => setShowPOC(false)} />;
+  }
+
   return (
     <div className="h-full flex flex-col">
       {/* Online/Offline indicator */}
@@ -67,7 +74,7 @@ function App() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 border-r border-gray-200 bg-gray-50 flex-shrink-0">
+        <aside className="w-64 border-r border-gray-200 bg-gray-50 flex-shrink-0 flex flex-col">
           <ContextList
             ongoingContexts={ongoingContexts}
             completedContexts={completedContexts}
@@ -76,6 +83,15 @@ function App() {
             onSelectContext={setSelectedContextId}
             onCreateContext={() => setIsCreateModalOpen(true)}
           />
+          {/* POC Link */}
+          <div className="mt-auto p-3 border-t border-gray-200">
+            <button
+              onClick={() => setShowPOC(true)}
+              className="w-full text-left px-3 py-2 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+            >
+              Automerge POC
+            </button>
+          </div>
         </aside>
 
         {/* Main content */}
