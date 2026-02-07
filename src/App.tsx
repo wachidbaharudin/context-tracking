@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useAutomerge, useContexts, useOnlineStatus } from '@/hooks';
 import { ContextList, ContextDetail, CreateContextModal } from '@/components/features/contexts';
+import { CalendarView } from '@/components/features/calendar';
 import { POCDashboard } from '@/poc';
+
+type ViewMode = 'contexts' | 'calendar';
 
 function App() {
   const { doc, isLoading, error, changeDoc } = useAutomerge();
@@ -9,6 +12,7 @@ function App() {
   const [selectedContextId, setSelectedContextId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [showPOC, setShowPOC] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('contexts');
 
   const {
     ongoingContexts,
@@ -25,6 +29,7 @@ function App() {
   const handleCreateContext = (name: string, description?: string, color?: string) => {
     const newId = createContext(name, description, color);
     setSelectedContextId(newId);
+    setViewMode('contexts');
   };
 
   const handleDeleteContext = (id: string) => {
@@ -34,6 +39,15 @@ function App() {
         setSelectedContextId(null);
       }
     }
+  };
+
+  const handleSelectContext = (contextId: string) => {
+    setSelectedContextId(contextId);
+    setViewMode('contexts');
+  };
+
+  const handleCalendarClick = () => {
+    setViewMode('calendar');
   };
 
   if (isLoading) {
@@ -80,8 +94,10 @@ function App() {
             completedContexts={completedContexts}
             stalledContextIds={stalledContextIds}
             selectedContextId={selectedContextId}
-            onSelectContext={setSelectedContextId}
+            onSelectContext={handleSelectContext}
             onCreateContext={() => setIsCreateModalOpen(true)}
+            onCalendarClick={handleCalendarClick}
+            isCalendarActive={viewMode === 'calendar'}
           />
           {/* POC Link */}
           <div className="mt-auto p-3 border-t border-gray-200">
@@ -96,7 +112,9 @@ function App() {
 
         {/* Main content */}
         <main className="flex-1 overflow-hidden bg-white">
-          {selectedContext ? (
+          {viewMode === 'calendar' ? (
+            <CalendarView doc={doc} onSelectContext={handleSelectContext} />
+          ) : selectedContext ? (
             <ContextDetail
               context={selectedContext}
               isStalled={stalledContextIds.has(selectedContext.id)}

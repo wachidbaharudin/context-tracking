@@ -1,5 +1,6 @@
 import { ContextCard } from './ContextCard';
 import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 import type { Context } from '@/types';
 
 interface ContextListProps {
@@ -9,6 +10,8 @@ interface ContextListProps {
   selectedContextId: string | null;
   onSelectContext: (id: string) => void;
   onCreateContext: () => void;
+  onCalendarClick?: () => void;
+  isCalendarActive?: boolean;
 }
 
 export function ContextList({
@@ -18,6 +21,8 @@ export function ContextList({
   selectedContextId,
   onSelectContext,
   onCreateContext,
+  onCalendarClick,
+  isCalendarActive,
 }: ContextListProps) {
   return (
     <div className="flex flex-col h-full">
@@ -25,10 +30,31 @@ export function ContextList({
         <h1 className="text-lg font-semibold text-gray-900">Contexts</h1>
       </div>
 
-      <div className="p-2">
+      <div className="p-2 space-y-1">
         <Button onClick={onCreateContext} className="w-full" size="sm">
           + New Context
         </Button>
+
+        {/* Calendar navigation button */}
+        {onCalendarClick && (
+          <button
+            onClick={onCalendarClick}
+            className={cn(
+              'w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+              isCalendarActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+            )}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            Calendar
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">
@@ -42,7 +68,7 @@ export function ContextList({
                 <ContextCard
                   key={context.id}
                   context={context}
-                  isActive={context.id === selectedContextId}
+                  isActive={context.id === selectedContextId && !isCalendarActive}
                   isStalled={stalledContextIds.has(context.id)}
                   onClick={() => onSelectContext(context.id)}
                 />
@@ -61,7 +87,7 @@ export function ContextList({
                 <ContextCard
                   key={context.id}
                   context={context}
-                  isActive={context.id === selectedContextId}
+                  isActive={context.id === selectedContextId && !isCalendarActive}
                   isStalled={false}
                   onClick={() => onSelectContext(context.id)}
                 />
