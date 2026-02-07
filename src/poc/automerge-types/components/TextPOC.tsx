@@ -54,10 +54,10 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Educational Note */}
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-        <h4 className="font-medium text-amber-800 mb-2">About Text in Automerge</h4>
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+        <h4 className="font-medium text-amber-800 mb-3">About Text in Automerge</h4>
         <p className="text-sm text-amber-700">
           This POC uses a simple string type, which means concurrent edits result in{' '}
           <strong>last-write-wins</strong> behavior for the entire string. In a real Automerge
@@ -70,16 +70,16 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
       </div>
 
       {/* Text Editor Section */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Text Editor</h3>
-        <div className="space-y-3">
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Text Editor</h3>
+        <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Plain Text</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Plain Text</label>
             <textarea
               value={doc.plainText}
               onChange={(e) => handleTextChange(e.target.value)}
               className={cn(
-                'w-full min-h-[120px] rounded-md border border-gray-300 px-3 py-2 text-sm',
+                'w-full min-h-[120px] rounded-md border border-gray-300 px-4 py-3 text-sm',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
                 'resize-y'
               )}
@@ -93,11 +93,11 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
       </div>
 
       {/* Text Operations Section */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Text Operations</h3>
-        <div className="space-y-4">
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Text Operations</h3>
+        <div className="space-y-5">
           {/* Append */}
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-3">
             <div className="flex-1">
               <Input
                 label="Text to append"
@@ -112,7 +112,7 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
           </div>
 
           {/* Prepend */}
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-3">
             <div className="flex-1">
               <Input
                 label="Text to prepend"
@@ -134,8 +134,8 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
           </div>
 
           {/* Current Value Display */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-md">
-            <div className="text-xs font-medium text-gray-500 mb-1">Current text value:</div>
+          <div className="mt-5 p-4 bg-gray-50 rounded-md">
+            <div className="text-xs font-medium text-gray-500 mb-2">Current text value:</div>
             <div className="text-sm font-mono text-gray-800 whitespace-pre-wrap break-words">
               {doc.plainText || <span className="text-gray-400 italic">(empty)</span>}
             </div>
@@ -144,9 +144,9 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
       </div>
 
       {/* Two-User Simulation Section */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Two-User Simulation</h3>
-        <p className="text-sm text-gray-600 mb-4">
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Two-User Simulation</h3>
+        <p className="text-sm text-gray-600 mb-5">
           Simulate two users making concurrent text changes. With string type (this POC), the merge
           will show last-write-wins behavior. Try having User A append "Hello" and User B append
           "World" to see the result.
@@ -162,7 +162,7 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
           onMerge={simulation.merge}
           onReset={simulation.reset}
           renderUserAControls={() => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Input
                 value={userAInput}
                 onChange={(e) => setUserAInput(e.target.value)}
@@ -182,7 +182,7 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
             </div>
           )}
           renderUserBControls={() => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Input
                 value={userBInput}
                 onChange={(e) => setUserBInput(e.target.value)}
@@ -202,7 +202,7 @@ export function TextPOC({ doc, changeDoc }: TextPOCProps) {
             </div>
           )}
           renderDocState={(simDoc) => (
-            <div className="text-sm font-mono bg-white p-2 rounded border whitespace-pre-wrap break-words">
+            <div className="text-sm font-mono bg-white p-3 rounded border whitespace-pre-wrap break-words">
               {simDoc.plainText || <span className="text-gray-400 italic">(empty)</span>}
             </div>
           )}

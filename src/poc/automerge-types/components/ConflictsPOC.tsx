@@ -119,11 +119,11 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Educational Header */}
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-        <h3 className="font-semibold text-amber-800 mb-2">About Conflicts in Automerge</h3>
-        <div className="text-sm text-amber-700 space-y-2">
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-6">
+        <h3 className="font-semibold text-amber-800 mb-3">About Conflicts in Automerge</h3>
+        <div className="text-sm text-amber-700 space-y-3">
           <p>
             When two users concurrently modify the same field, Automerge uses{' '}
             <strong>Last Writer Wins (LWW)</strong> to automatically pick a winner. However, "last"
@@ -139,21 +139,21 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
       </div>
 
       {/* Current State Display */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Current State</h3>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="p-3 bg-gray-50 rounded">
-            <div className="text-sm text-gray-500 mb-1">Title</div>
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Current State</h3>
+        <div className="grid grid-cols-2 gap-5 mb-5">
+          <div className="p-4 bg-gray-50 rounded">
+            <div className="text-sm text-gray-500 mb-2">Title</div>
             <div className="font-mono text-lg">{doc.conflictDemo.title}</div>
           </div>
-          <div className="p-3 bg-gray-50 rounded">
-            <div className="text-sm text-gray-500 mb-1">Priority</div>
+          <div className="p-4 bg-gray-50 rounded">
+            <div className="text-sm text-gray-500 mb-2">Priority</div>
             <div className="font-mono text-lg">{doc.conflictDemo.priority}</div>
           </div>
         </div>
 
         {/* Update Form */}
-        <div className="flex gap-3 items-end">
+        <div className="flex gap-4 items-end">
           <div className="flex-1">
             <Input
               label="Title"
@@ -177,8 +177,8 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
       </div>
 
       {/* Two-User Simulation */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Conflict Simulation</h3>
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Conflict Simulation</h3>
         <TwoUserSimulator<POCDocument>
           isSimulating={state.isSimulating}
           userADoc={state.userA?.doc ?? null}
@@ -196,20 +196,20 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
 
       {/* Conflict Detection Panel */}
       {state.mergeComplete && mergedConflicts.length > 0 && (
-        <div className="rounded-lg border-2 border-red-300 bg-red-50 p-4">
-          <h3 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+        <div className="rounded-lg border-2 border-red-300 bg-red-50 p-6">
+          <h3 className="font-semibold text-red-800 mb-4 flex items-center gap-2">
             <span className="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse" />
             Conflicts Detected!
           </h3>
-          <p className="text-sm text-red-700 mb-4">
+          <p className="text-sm text-red-700 mb-5">
             The following fields have conflicting values from concurrent edits. Automerge
             automatically picked a winner, but you can see all values below.
           </p>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {mergedConflicts.map((conflict) => (
-              <div key={conflict.field} className="bg-white rounded-lg border border-red-200 p-3">
-                <div className="flex items-center justify-between mb-2">
+              <div key={conflict.field} className="bg-white rounded-lg border border-red-200 p-4">
+                <div className="flex items-center justify-between mb-3">
                   <span className="font-medium text-gray-800">
                     Field: <code className="bg-gray-100 px-1 rounded">{conflict.field}</code>
                   </span>
@@ -218,14 +218,14 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
                   </span>
                 </div>
 
-                <div className="text-sm text-gray-600 mb-3">
-                  <div className="font-medium mb-1">All conflicting values:</div>
-                  <div className="space-y-1">
+                <div className="text-sm text-gray-600 mb-4">
+                  <div className="font-medium mb-2">All conflicting values:</div>
+                  <div className="space-y-2">
                     {Object.entries(conflict.conflicts).map(([opId, value]) => (
                       <div
                         key={opId}
                         className={cn(
-                          'flex justify-between items-center px-2 py-1 rounded',
+                          'flex justify-between items-center px-3 py-2 rounded',
                           value === conflict.winningValue
                             ? 'bg-green-100 text-green-800'
                             : 'bg-gray-100 text-gray-700'
@@ -241,7 +241,7 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   {Object.entries(conflict.conflicts).map(([opId, value]) => (
                     <Button
                       key={opId}
@@ -263,12 +263,12 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
 
       {/* No Conflicts Message */}
       {state.mergeComplete && mergedConflicts.length === 0 && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-          <h3 className="font-semibold text-green-800 mb-2">No Conflicts</h3>
+        <div className="rounded-lg border border-green-200 bg-green-50 p-6">
+          <h3 className="font-semibold text-green-800 mb-3">No Conflicts</h3>
           <p className="text-sm text-green-700">
             The merge completed without any conflicts. This can happen if:
           </p>
-          <ul className="text-sm text-green-700 list-disc list-inside mt-2">
+          <ul className="text-sm text-green-700 list-disc list-inside mt-3 space-y-1">
             <li>Users edited different fields</li>
             <li>Only one user made changes</li>
             <li>The conflict was already resolved</li>
@@ -277,11 +277,11 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
       )}
 
       {/* Technical Details */}
-      <details className="rounded-lg border border-gray-200 p-4">
+      <details className="rounded-lg border border-gray-200 p-6">
         <summary className="font-semibold text-gray-800 cursor-pointer">
           Technical Details: How LWW Works
         </summary>
-        <div className="mt-3 text-sm text-gray-600 space-y-2">
+        <div className="mt-4 text-sm text-gray-600 space-y-3">
           <p>
             <strong>Operation IDs:</strong> Each change in Automerge gets a unique operation ID that
             includes the actor ID (unique per client) and a sequence number. When merging, Automerge
@@ -296,7 +296,7 @@ export function ConflictsPOC({ doc, changeDoc }: ConflictsPOCProps) {
             <strong>getConflicts():</strong> Returns an object mapping operation IDs to their
             values. If there's no conflict, it returns <code>undefined</code>.
           </p>
-          <pre className="mt-2 p-3 bg-gray-900 text-gray-100 rounded-lg overflow-auto text-xs">
+          <pre className="mt-3 p-4 bg-gray-900 text-gray-100 rounded-lg overflow-auto text-xs">
             {`// Example usage:
 import * as Automerge from '@automerge/automerge';
 

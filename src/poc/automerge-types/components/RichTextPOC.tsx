@@ -63,11 +63,11 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Educational Note */}
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-        <h4 className="font-medium text-blue-800 mb-2">About Rich Text in Automerge</h4>
-        <p className="text-sm text-blue-700 mb-2">
+      <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
+        <h4 className="font-medium text-blue-800 mb-3">About Rich Text in Automerge</h4>
+        <p className="text-sm text-blue-700 mb-3">
           Automerge supports rich text with <strong>"marks"</strong> (bold, italic, links, etc.)
           using algorithms inspired by the{' '}
           <a
@@ -91,11 +91,11 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
       </div>
 
       {/* Rich Text Editor Section */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Rich Text Editor</h3>
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Rich Text Editor</h3>
 
         {/* Formatting Toolbar */}
-        <div className="flex gap-2 mb-3">
+        <div className="flex gap-3 mb-4">
           <Button
             size="sm"
             variant="secondary"
@@ -127,16 +127,16 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
         </div>
 
         {/* Text Input */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Rich Text (with markdown markers)
             </label>
             <textarea
               value={doc.richText}
               onChange={(e) => handleTextChange(e.target.value)}
               className={cn(
-                'w-full min-h-[100px] rounded-md border border-gray-300 px-3 py-2 text-sm font-mono',
+                'w-full min-h-[100px] rounded-md border border-gray-300 px-4 py-3 text-sm font-mono',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
                 'resize-y'
               )}
@@ -147,13 +147,13 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
       </div>
 
       {/* Side-by-Side View: Raw vs Rendered */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Raw Text vs Rendered Preview</h3>
-        <div className="grid grid-cols-2 gap-4">
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Raw Text vs Rendered Preview</h3>
+        <div className="grid grid-cols-2 gap-6">
           {/* Raw Text */}
           <div>
-            <div className="text-xs font-medium text-gray-500 mb-2">Raw Text (with markers)</div>
-            <div className="p-3 bg-gray-50 rounded-md min-h-[80px]">
+            <div className="text-xs font-medium text-gray-500 mb-3">Raw Text (with markers)</div>
+            <div className="p-4 bg-gray-50 rounded-md min-h-[80px]">
               <pre className="text-sm font-mono text-gray-800 whitespace-pre-wrap break-words">
                 {doc.richText || <span className="text-gray-400 italic">(empty)</span>}
               </pre>
@@ -162,8 +162,8 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
 
           {/* Rendered Preview */}
           <div>
-            <div className="text-xs font-medium text-gray-500 mb-2">Rendered Preview</div>
-            <div className="p-3 bg-white rounded-md border min-h-[80px]">
+            <div className="text-xs font-medium text-gray-500 mb-3">Rendered Preview</div>
+            <div className="p-4 bg-white rounded-md border min-h-[80px]">
               {doc.richText ? (
                 <div
                   className="text-sm text-gray-800"
@@ -178,23 +178,23 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
       </div>
 
       {/* Formatting Reference */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-3">Formatting Reference</h3>
-        <div className="grid grid-cols-3 gap-4 text-sm">
-          <div className="p-2 bg-gray-50 rounded">
-            <div className="font-mono text-gray-600 mb-1">**text**</div>
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-4">Formatting Reference</h3>
+        <div className="grid grid-cols-3 gap-5 text-sm">
+          <div className="p-3 bg-gray-50 rounded">
+            <div className="font-mono text-gray-600 mb-2">**text**</div>
             <div>
               <strong>Bold</strong>
             </div>
           </div>
-          <div className="p-2 bg-gray-50 rounded">
-            <div className="font-mono text-gray-600 mb-1">*text*</div>
+          <div className="p-3 bg-gray-50 rounded">
+            <div className="font-mono text-gray-600 mb-2">*text*</div>
             <div>
               <em>Italic</em>
             </div>
           </div>
-          <div className="p-2 bg-gray-50 rounded">
-            <div className="font-mono text-gray-600 mb-1">__text__</div>
+          <div className="p-3 bg-gray-50 rounded">
+            <div className="font-mono text-gray-600 mb-2">__text__</div>
             <div>
               <u>Underline</u>
             </div>
@@ -203,9 +203,9 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
       </div>
 
       {/* Two-User Simulation Section */}
-      <div className="rounded-lg border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-800 mb-4">Two-User Simulation</h3>
-        <p className="text-sm text-gray-600 mb-4">
+      <div className="rounded-lg border border-gray-200 p-6">
+        <h3 className="font-semibold text-gray-800 mb-5">Two-User Simulation</h3>
+        <p className="text-sm text-gray-600 mb-5">
           Simulate two users adding formatted text concurrently. User A adds{' '}
           <code className="bg-gray-100 px-1 rounded">**bold text**</code>, User B adds{' '}
           <code className="bg-gray-100 px-1 rounded">*italic text*</code>. After merge, both
@@ -222,7 +222,7 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
           onMerge={simulation.merge}
           onReset={simulation.reset}
           renderUserAControls={() => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Input
                 value={userAInput}
                 onChange={(e) => setUserAInput(e.target.value)}
@@ -242,7 +242,7 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
             </div>
           )}
           renderUserBControls={() => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Input
                 value={userBInput}
                 onChange={(e) => setUserBInput(e.target.value)}
@@ -262,13 +262,13 @@ export function RichTextPOC({ doc, changeDoc }: RichTextPOCProps) {
             </div>
           )}
           renderDocState={(simDoc) => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="text-xs text-gray-500">Raw:</div>
-              <div className="text-sm font-mono bg-white p-2 rounded border whitespace-pre-wrap break-words">
+              <div className="text-sm font-mono bg-white p-3 rounded border whitespace-pre-wrap break-words">
                 {simDoc.richText || <span className="text-gray-400 italic">(empty)</span>}
               </div>
               <div className="text-xs text-gray-500">Rendered:</div>
-              <div className="text-sm bg-white p-2 rounded border">
+              <div className="text-sm bg-white p-3 rounded border">
                 {simDoc.richText ? (
                   <span
                     dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(simDoc.richText) }}

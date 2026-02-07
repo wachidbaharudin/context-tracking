@@ -16,8 +16,8 @@ function UserPanel({ userId, label, children, className }: UserPanelProps) {
   };
 
   return (
-    <div className={cn('rounded-lg border-2 p-4', colors[userId], className)}>
-      <div className="mb-3 font-semibold text-sm">
+    <div className={cn('rounded-lg border-2 p-6', colors[userId], className)}>
+      <div className="mb-4 font-semibold text-sm">
         {label} ({userId === 'A' ? 'Blue' : 'Green'})
       </div>
       {children}
@@ -57,9 +57,9 @@ export function TwoUserSimulator<T>({
 }: TwoUserSimulatorProps<T>) {
   if (!isSimulating) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 p-6 text-center">
-        <h4 className="mb-2 font-medium text-gray-700">Two-User Simulation</h4>
-        <p className="mb-4 text-sm text-gray-500">
+      <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center">
+        <h4 className="mb-3 font-medium text-gray-700">Two-User Simulation</h4>
+        <p className="mb-5 text-sm text-gray-500">
           Fork the current document into two copies, make changes as different users, then merge to
           see how Automerge handles concurrent edits.
         </p>
@@ -69,7 +69,7 @@ export function TwoUserSimulator<T>({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h4 className="font-medium text-gray-700">Two-User Simulation</h4>
         <Button variant="secondary" size="sm" onClick={onReset}>
@@ -78,14 +78,14 @@ export function TwoUserSimulator<T>({
       </div>
 
       {/* User panels side by side */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         {userADoc && (
           <UserPanel userId="A" label="User A">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="text-xs text-gray-600">Make changes as User A:</div>
               {renderUserAControls(userADoc)}
-              <div className="mt-3 border-t pt-3">
-                <div className="text-xs font-medium text-gray-500 mb-1">User A's state:</div>
+              <div className="mt-4 border-t pt-4">
+                <div className="text-xs font-medium text-gray-500 mb-2">User A's state:</div>
                 {renderDocState(userADoc, 'User A')}
               </div>
             </div>
@@ -94,11 +94,11 @@ export function TwoUserSimulator<T>({
 
         {userBDoc && (
           <UserPanel userId="B" label="User B">
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="text-xs text-gray-600">Make changes as User B:</div>
               {renderUserBControls(userBDoc)}
-              <div className="mt-3 border-t pt-3">
-                <div className="text-xs font-medium text-gray-500 mb-1">User B's state:</div>
+              <div className="mt-4 border-t pt-4">
+                <div className="text-xs font-medium text-gray-500 mb-2">User B's state:</div>
                 {renderDocState(userBDoc, 'User B')}
               </div>
             </div>
@@ -108,7 +108,7 @@ export function TwoUserSimulator<T>({
 
       {/* Merge button */}
       {!mergeComplete && (
-        <div className="flex justify-center">
+        <div className="flex justify-center py-2">
           <Button onClick={onMerge} className="px-8">
             Merge Changes
           </Button>
@@ -117,8 +117,8 @@ export function TwoUserSimulator<T>({
 
       {/* Merged result */}
       {mergeComplete && mergedDoc && (
-        <div className="rounded-lg border-2 border-purple-300 bg-purple-50 p-4">
-          <div className="mb-2 font-semibold text-sm text-purple-700">Merged Result</div>
+        <div className="rounded-lg border-2 border-purple-300 bg-purple-50 p-6">
+          <div className="mb-3 font-semibold text-sm text-purple-700">Merged Result</div>
           {renderDocState(mergedDoc, 'Merged')}
         </div>
       )}

@@ -75,15 +75,15 @@ export function POCDashboard({ onBack }: POCDashboardProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white px-6 py-4">
+      <header className="border-b border-gray-200 bg-white px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold text-gray-900">Automerge Data Types POC</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 mt-2">
               Explore different Automerge data types and their merge behavior
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <Button variant="secondary" size="sm" onClick={resetDocument}>
               Reset Document
             </Button>
@@ -95,14 +95,14 @@ export function POCDashboard({ onBack }: POCDashboardProps) {
       </header>
 
       {/* Tab navigation */}
-      <nav className="border-b border-gray-200 bg-gray-50 px-6">
-        <div className="flex gap-1">
+      <nav className="border-b border-gray-200 bg-gray-50 px-8">
+        <div className="flex gap-2">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
+                'px-5 py-4 text-sm font-medium border-b-2 -mb-px transition-colors',
                 activeTab === tab.id
                   ? 'border-blue-600 text-blue-600 bg-white'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -115,20 +115,20 @@ export function POCDashboard({ onBack }: POCDashboardProps) {
       </nav>
 
       {/* Tab description */}
-      <div className="bg-blue-50 border-b border-blue-100 px-6 py-2">
+      <div className="bg-blue-50 border-b border-blue-100 px-8 py-3">
         <p className="text-sm text-blue-700">{TABS.find((t) => t.id === activeTab)?.description}</p>
       </div>
 
       {/* Content */}
-      <main className="flex-1 overflow-auto p-6">{renderTabContent()}</main>
+      <main className="flex-1 overflow-auto p-8">{renderTabContent()}</main>
 
       {/* Footer with raw document state */}
-      <footer className="border-t border-gray-200 bg-gray-50 px-6 py-3">
+      <footer className="border-t border-gray-200 bg-gray-50 px-8 py-4">
         <details className="text-sm">
           <summary className="cursor-pointer text-gray-600 hover:text-gray-900">
             View raw POC document state
           </summary>
-          <pre className="mt-2 p-3 bg-gray-900 text-gray-100 rounded-lg overflow-auto max-h-48 text-xs">
+          <pre className="mt-3 p-4 bg-gray-900 text-gray-100 rounded-lg overflow-auto max-h-48 text-xs">
             {JSON.stringify(doc, null, 2)}
           </pre>
         </details>

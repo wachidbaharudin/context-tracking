@@ -110,15 +110,15 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
   const [simValueB, setSimValueB] = useState('value from B');
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Simple Map Section */}
-      <section className="space-y-4">
+      <section className="space-y-5">
         <h3 className="text-lg font-semibold text-gray-900">
           Simple Map (Record&lt;string, string&gt;)
         </h3>
 
         {/* Add/Update Form */}
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-3 items-end">
           <Input
             label="Key"
             value={simpleKey}
@@ -143,24 +143,24 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
           <table className="w-full text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2 text-left font-medium text-gray-700">Key</th>
-                <th className="px-4 py-2 text-left font-medium text-gray-700">Value</th>
-                <th className="px-4 py-2 text-right font-medium text-gray-700">Actions</th>
+                <th className="px-5 py-3 text-left font-medium text-gray-700">Key</th>
+                <th className="px-5 py-3 text-left font-medium text-gray-700">Value</th>
+                <th className="px-5 py-3 text-right font-medium text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {Object.entries(doc.simpleMap).length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="px-4 py-3 text-center text-gray-500 italic">
+                  <td colSpan={3} className="px-5 py-4 text-center text-gray-500 italic">
                     No entries yet
                   </td>
                 </tr>
               ) : (
                 Object.entries(doc.simpleMap).map(([key, value]) => (
                   <tr key={key}>
-                    <td className="px-4 py-2 font-mono text-gray-900">{key}</td>
-                    <td className="px-4 py-2 text-gray-700">{value}</td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-5 py-3 font-mono text-gray-900">{key}</td>
+                    <td className="px-5 py-3 text-gray-700">{value}</td>
+                    <td className="px-5 py-3 text-right">
                       <Button
                         variant="danger"
                         size="sm"
@@ -177,8 +177,8 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
         </div>
 
         {/* JSON representation */}
-        <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">JSON:</div>
+        <div className="rounded-lg bg-gray-50 p-4">
+          <div className="text-xs font-medium text-gray-500 mb-2">JSON:</div>
           <pre className="text-xs text-gray-700 overflow-auto">
             {JSON.stringify(doc.simpleMap, null, 2)}
           </pre>
@@ -186,13 +186,13 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
       </section>
 
       {/* Nested Map Section */}
-      <section className="space-y-4">
+      <section className="space-y-5">
         <h3 className="text-lg font-semibold text-gray-900">
           Nested Map (Record&lt;string, NestedMapItem&gt;)
         </h3>
 
         {/* Add Form */}
-        <div className="flex gap-2 items-end flex-wrap">
+        <div className="flex gap-3 items-end flex-wrap">
           <Input
             label="Name"
             value={nestedName}
@@ -221,9 +221,9 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
         </div>
 
         {/* Current entries list */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {Object.entries(doc.nestedMap).length === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 p-4 text-center text-gray-500 italic">
+            <div className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-gray-500 italic">
               No nested entries yet
             </div>
           ) : (
@@ -231,13 +231,13 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
               <div
                 key={id}
                 className={cn(
-                  'rounded-lg border border-gray-200 p-3',
+                  'rounded-lg border border-gray-200 p-4',
                   editingId === id && 'border-blue-300 bg-blue-50'
                 )}
               >
                 {editingId === id ? (
-                  <div className="space-y-2">
-                    <div className="flex gap-2 items-end flex-wrap">
+                  <div className="space-y-3">
+                    <div className="flex gap-3 items-end flex-wrap">
                       <Input
                         label="Name"
                         value={editName}
@@ -258,7 +258,7 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
                         className="flex-1 min-w-[200px]"
                       />
                     </div>
-                    <div className="flex gap-2 justify-end">
+                    <div className="flex gap-3 justify-end">
                       <Button variant="secondary" size="sm" onClick={handleCancelEdit}>
                         Cancel
                       </Button>
@@ -271,15 +271,15 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-gray-900">{item.name}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600 mt-1">
                         Count: {item.count}
                         {item.tags.length > 0 && (
-                          <span className="ml-2">
+                          <span className="ml-3">
                             Tags:{' '}
                             {item.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="inline-block px-1.5 py-0.5 bg-gray-100 rounded text-xs mr-1"
+                                className="inline-block px-2 py-0.5 bg-gray-100 rounded text-xs mr-1"
                               >
                                 {tag}
                               </span>
@@ -287,9 +287,9 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-400 font-mono mt-1">ID: {id}</div>
+                      <div className="text-xs text-gray-400 font-mono mt-2">ID: {id}</div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
                         variant="secondary"
                         size="sm"
@@ -313,8 +313,8 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
         </div>
 
         {/* JSON representation */}
-        <div className="rounded-lg bg-gray-50 p-3">
-          <div className="text-xs font-medium text-gray-500 mb-1">JSON:</div>
+        <div className="rounded-lg bg-gray-50 p-4">
+          <div className="text-xs font-medium text-gray-500 mb-2">JSON:</div>
           <pre className="text-xs text-gray-700 overflow-auto max-h-48">
             {JSON.stringify(doc.nestedMap, null, 2)}
           </pre>
@@ -322,7 +322,7 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
       </section>
 
       {/* Two-User Simulation Section */}
-      <section className="space-y-4">
+      <section className="space-y-5">
         <h3 className="text-lg font-semibold text-gray-900">Two-User Merge Simulation</h3>
         <p className="text-sm text-gray-600">
           Demonstrates how Automerge handles concurrent map edits from different users.
@@ -338,8 +338,8 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
           onMerge={simulation.merge}
           onReset={simulation.reset}
           renderUserAControls={() => (
-            <div className="space-y-2">
-              <div className="flex gap-2 items-end">
+            <div className="space-y-3">
+              <div className="flex gap-3 items-end">
                 <Input
                   label="Key"
                   value={simKeyA}
@@ -369,8 +369,8 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
             </div>
           )}
           renderUserBControls={() => (
-            <div className="space-y-2">
-              <div className="flex gap-2 items-end">
+            <div className="space-y-3">
+              <div className="flex gap-3 items-end">
                 <Input
                   label="Key"
                   value={simKeyB}
@@ -400,8 +400,8 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
             </div>
           )}
           renderDocState={(docState, label) => (
-            <div className="rounded bg-white/50 p-2">
-              <div className="text-xs font-medium text-gray-600 mb-1">{label} - simpleMap:</div>
+            <div className="rounded bg-white/50 p-3">
+              <div className="text-xs font-medium text-gray-600 mb-2">{label} - simpleMap:</div>
               <pre className="text-xs text-gray-700 overflow-auto">
                 {JSON.stringify(docState.simpleMap, null, 2)}
               </pre>
@@ -410,9 +410,9 @@ export function MapPOC({ doc, changeDoc }: MapPOCProps) {
         />
 
         {/* Explanation of merge behavior */}
-        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
-          <div className="font-medium mb-2">How Automerge Merges Maps:</div>
-          <ul className="list-disc list-inside space-y-1 text-gray-600">
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700">
+          <div className="font-medium mb-3">How Automerge Merges Maps:</div>
+          <ul className="list-disc list-inside space-y-2 text-gray-600">
             <li>
               <strong>Different keys:</strong> Both entries are preserved (e.g., User A adds "foo",
               User B adds "bar" = both in merged result)

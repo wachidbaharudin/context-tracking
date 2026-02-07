@@ -73,7 +73,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
     <div
       key={item.id}
       className={cn(
-        'flex items-center gap-3 rounded-md border p-3',
+        'flex items-center gap-4 rounded-md border p-4',
         item.done ? 'border-gray-200 bg-gray-50' : 'border-gray-300 bg-white'
       )}
     >
@@ -87,7 +87,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
         <p className={cn('text-sm truncate', item.done && 'line-through text-gray-500')}>
           {item.text}
         </p>
-        <p className="text-xs text-gray-400">{new Date(item.createdAt).toLocaleString()}</p>
+        <p className="text-xs text-gray-400 mt-1">{new Date(item.createdAt).toLocaleString()}</p>
       </div>
       <Button variant="danger" size="sm" onClick={onDelete}>
         Delete
@@ -100,7 +100,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
     onToggle: (id: string) => void,
     onDelete: (id: string) => void
   ) => (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {items.length === 0 ? (
         <p className="text-sm text-gray-500 italic">No items in list</p>
       ) : (
@@ -116,18 +116,18 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
   );
 
   const renderDocState = (d: POCDocument) => (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="text-xs text-gray-600">Length: {d.todoList.length} items</div>
       <div className="max-h-40 overflow-auto">
         {d.todoList.length === 0 ? (
           <p className="text-xs text-gray-400 italic">Empty list</p>
         ) : (
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {d.todoList.map((item, idx) => (
               <li
                 key={item.id}
                 className={cn(
-                  'text-xs p-1 rounded',
+                  'text-xs p-2 rounded',
                   item.done ? 'bg-gray-100 line-through text-gray-500' : 'bg-white'
                 )}
               >
@@ -139,7 +139,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
       </div>
       <details className="text-xs">
         <summary className="cursor-pointer text-gray-500 hover:text-gray-700">Show JSON</summary>
-        <pre className="mt-1 max-h-32 overflow-auto rounded bg-gray-100 p-2 text-xs">
+        <pre className="mt-2 max-h-32 overflow-auto rounded bg-gray-100 p-3 text-xs">
           {JSON.stringify(d.todoList, null, 2)}
         </pre>
       </details>
@@ -147,19 +147,19 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900">List POC</h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 mt-1">
           Demonstrates Automerge list operations with todo items
         </p>
       </div>
 
       {/* Add Item Form */}
-      <div className="space-y-3 rounded-lg border border-gray-200 p-4">
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
         <h4 className="font-medium text-gray-700">Add New Item</h4>
-        <div className="flex gap-3 items-end">
+        <div className="flex gap-4 items-end">
           <div className="flex-1">
             <Input
               placeholder="Enter todo text..."
@@ -173,7 +173,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
             <select
               value={insertPosition}
               onChange={(e) => setInsertPosition(e.target.value as InsertPosition)}
-              className="h-10 rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="beginning">Beginning</option>
               <option value="end">End</option>
@@ -189,7 +189,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
                 max={doc.todoList.length}
                 value={insertIndex}
                 onChange={(e) => setInsertIndex(parseInt(e.target.value) || 0)}
-                className="h-10 w-20 rounded-md border border-gray-300 px-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="h-10 w-20 rounded-md border border-gray-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -200,7 +200,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
       </div>
 
       {/* Current Todo List */}
-      <div className="space-y-3 rounded-lg border border-gray-200 p-4">
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <h4 className="font-medium text-gray-700">Todo List</h4>
           <span className="text-xs text-gray-500">
@@ -212,17 +212,17 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
       </div>
 
       {/* JSON Display */}
-      <details className="rounded-lg border border-gray-200 p-4">
+      <details className="rounded-lg border border-gray-200 p-6">
         <summary className="cursor-pointer font-medium text-gray-700">
           Document State (JSON)
         </summary>
-        <pre className="mt-3 max-h-48 overflow-auto rounded bg-gray-50 p-3 text-xs">
+        <pre className="mt-4 max-h-48 overflow-auto rounded bg-gray-50 p-4 text-xs">
           {JSON.stringify(doc.todoList, null, 2)}
         </pre>
       </details>
 
       {/* Two-User Simulation */}
-      <div className="rounded-lg border border-gray-200 p-4">
+      <div className="rounded-lg border border-gray-200 p-6">
         <TwoUserSimulator<POCDocument>
           isSimulating={simulation.state.isSimulating}
           userADoc={simulation.state.userA?.doc ?? null}
@@ -233,7 +233,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
           onMerge={simulation.merge}
           onReset={simulation.reset}
           renderUserAControls={(userDoc) => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="text-xs text-gray-500">User A adds item at beginning</p>
               <Button
                 size="sm"
@@ -247,7 +247,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
               </Button>
               {userDoc.todoList.length > 0 && (
                 <>
-                  <p className="text-xs text-gray-500 mt-2">Or delete first item</p>
+                  <p className="text-xs text-gray-500 mt-3">Or delete first item</p>
                   <Button
                     size="sm"
                     variant="danger"
@@ -266,7 +266,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
             </div>
           )}
           renderUserBControls={(userDoc) => (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <p className="text-xs text-gray-500">User B adds item at end</p>
               <Button
                 size="sm"
@@ -280,7 +280,7 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
               </Button>
               {userDoc.todoList.length > 0 && (
                 <>
-                  <p className="text-xs text-gray-500 mt-2">Or toggle first item done</p>
+                  <p className="text-xs text-gray-500 mt-3">Or toggle first item done</p>
                   <Button
                     size="sm"
                     variant="secondary"
@@ -303,9 +303,9 @@ export function ListPOC({ doc, changeDoc }: ListPOCProps) {
       </div>
 
       {/* Demonstration Notes */}
-      <div className="rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
-        <h4 className="font-medium mb-2">Two-User Simulation Demonstrations:</h4>
-        <ul className="list-disc list-inside space-y-1 text-xs">
+      <div className="rounded-lg bg-blue-50 p-6 text-sm text-blue-800">
+        <h4 className="font-medium mb-3">Two-User Simulation Demonstrations:</h4>
+        <ul className="list-disc list-inside space-y-2 text-xs">
           <li>
             <strong>Concurrent inserts:</strong> User A inserts at beginning, User B inserts at end.
             After merge, both items appear in their respective positions.
