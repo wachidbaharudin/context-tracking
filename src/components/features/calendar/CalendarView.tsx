@@ -1,20 +1,14 @@
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 import {
-  formatMonthYear,
   formatWeekRange,
   getStartOfWeek,
   getEndOfWeek,
-  getPreviousMonth,
-  getNextMonth,
   getPreviousWeek,
   getNextWeek,
 } from '@/lib/utils/calendarUtils';
 import { useAllActionItems } from '@/hooks';
-import { MonthlyCalendar } from './MonthlyCalendar';
 import { WeeklyCalendar } from './WeeklyCalendar';
 import { UnscheduledItems } from './UnscheduledItems';
-import type { CalendarViewMode } from './types';
 import type { AppDocument } from '@/types/document';
 
 interface CalendarViewProps {
@@ -24,37 +18,25 @@ interface CalendarViewProps {
 }
 
 export function CalendarView({ doc, onSelectContext, onBack }: CalendarViewProps) {
-  const [viewMode, setViewMode] = useState<CalendarViewMode>('monthly');
   const [currentDate, setCurrentDate] = useState(() => new Date());
 
   const { scheduledItems, unscheduledItems } = useAllActionItems({ doc });
 
   // Navigation handlers
   const handlePrevious = () => {
-    if (viewMode === 'monthly') {
-      setCurrentDate(getPreviousMonth(currentDate));
-    } else {
-      setCurrentDate(getPreviousWeek(currentDate));
-    }
+    setCurrentDate(getPreviousWeek(currentDate));
   };
 
   const handleNext = () => {
-    if (viewMode === 'monthly') {
-      setCurrentDate(getNextMonth(currentDate));
-    } else {
-      setCurrentDate(getNextWeek(currentDate));
-    }
+    setCurrentDate(getNextWeek(currentDate));
   };
 
   const handleToday = () => {
     setCurrentDate(new Date());
   };
 
-  // Format header text based on view mode
-  const headerText =
-    viewMode === 'monthly'
-      ? formatMonthYear(currentDate)
-      : formatWeekRange(getStartOfWeek(currentDate), getEndOfWeek(currentDate));
+  // Format header text for week view
+  const headerText = formatWeekRange(getStartOfWeek(currentDate), getEndOfWeek(currentDate));
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -87,7 +69,7 @@ export function CalendarView({ doc, onSelectContext, onBack }: CalendarViewProps
             <button
               onClick={handlePrevious}
               className="p-1.5 rounded hover:bg-gray-100 transition-colors"
-              aria-label="Previous"
+              aria-label="Previous week"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -109,7 +91,7 @@ export function CalendarView({ doc, onSelectContext, onBack }: CalendarViewProps
             <button
               onClick={handleNext}
               className="p-1.5 rounded hover:bg-gray-100 transition-colors"
-              aria-label="Next"
+              aria-label="Next week"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -126,49 +108,18 @@ export function CalendarView({ doc, onSelectContext, onBack }: CalendarViewProps
             </span>
           </div>
 
-          {/* Right: View toggle */}
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('monthly')}
-              className={cn(
-                'px-3 py-1 text-sm font-medium rounded-md transition-colors',
-                viewMode === 'monthly'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              )}
-            >
-              Month
-            </button>
-            <button
-              onClick={() => setViewMode('weekly')}
-              className={cn(
-                'px-3 py-1 text-sm font-medium rounded-md transition-colors',
-                viewMode === 'weekly'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              )}
-            >
-              Week
-            </button>
-          </div>
+          {/* Right: Empty space for balance */}
+          <div className="w-24" />
         </div>
       </div>
 
       {/* Calendar content */}
       <div className="flex-1 overflow-hidden">
-        {viewMode === 'monthly' ? (
-          <MonthlyCalendar
-            currentDate={currentDate}
-            scheduledItems={scheduledItems}
-            onSelectContext={onSelectContext}
-          />
-        ) : (
-          <WeeklyCalendar
-            currentDate={currentDate}
-            scheduledItems={scheduledItems}
-            onSelectContext={onSelectContext}
-          />
-        )}
+        <WeeklyCalendar
+          currentDate={currentDate}
+          scheduledItems={scheduledItems}
+          onSelectContext={onSelectContext}
+        />
       </div>
 
       {/* Unscheduled items section */}

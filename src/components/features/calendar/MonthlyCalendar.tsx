@@ -46,7 +46,6 @@ export function MonthlyCalendar({
               items={items}
               isToday={isToday(date)}
               isCurrentMonth={isInMonth(date, year, month)}
-              variant="monthly"
               onSelectContext={onSelectContext}
             />
           );

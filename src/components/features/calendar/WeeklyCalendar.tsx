@@ -49,7 +49,6 @@ export function WeeklyCalendar({
               items={items}
               isToday={isToday(date)}
               isCurrentMonth={true}
-              variant="weekly"
               onSelectContext={onSelectContext}
             />
           );

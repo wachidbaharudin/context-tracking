@@ -1,3 +1,4 @@
+export { ActionItemCard } from './ActionItemCard';
 export { ActionItemPopover } from './ActionItemPopover';
 export { CalendarDay } from './CalendarDay';
 export { UnscheduledItems } from './UnscheduledItems';

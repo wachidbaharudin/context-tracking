@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
-import { getContextColor } from '@/lib/utils/getContextColor';
+import { ActionItemCard } from './ActionItemCard';
 import { ActionItemPopover } from './ActionItemPopover';
 import type { ActionItemWithContext } from '@/hooks/useAllActionItems';
 
@@ -9,100 +9,77 @@ interface CalendarDayProps {
   items: ActionItemWithContext[];
   isToday: boolean;
   isCurrentMonth: boolean;
-  variant: 'monthly' | 'weekly';
   onSelectContext?: (contextId: string) => void;
 }
-
-const MAX_VISIBLE_DOTS = 4;
 
 export function CalendarDay({
   date,
   items,
   isToday,
   isCurrentMonth,
-  variant,
   onSelectContext,
 }: CalendarDayProps) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+  const [selectedItems, setSelectedItems] = useState<ActionItemWithContext[]>([]);
   const cellRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = useCallback(() => {
-    if (items.length === 0) return;
-
-    if (cellRef.current) {
-      setAnchorRect(cellRef.current.getBoundingClientRect());
-    }
-    setIsPopoverOpen(true);
-  }, [items.length]);
+  const handleCardClick = useCallback(
+    (itemWithContext: ActionItemWithContext, event: React.MouseEvent) => {
+      event.stopPropagation();
+      const target = event.currentTarget as HTMLElement;
+      setAnchorRect(target.getBoundingClientRect());
+      setSelectedItems([itemWithContext]);
+      setIsPopoverOpen(true);
+    },
+    []
+  );
 
   const handleClose = useCallback(() => {
     setIsPopoverOpen(false);
+    setSelectedItems([]);
   }, []);
-
-  const visibleItems = items.slice(0, MAX_VISIBLE_DOTS);
-  const remainingCount = items.length - MAX_VISIBLE_DOTS;
-
-  const isMonthly = variant === 'monthly';
 
   return (
     <>
       <div
         ref={cellRef}
-        onClick={handleClick}
         className={cn(
-          'relative border-b border-r border-gray-200',
-          'transition-colors',
-          isMonthly ? 'min-h-20 p-1' : 'min-h-32 p-2',
+          'relative border-b border-r border-gray-200 flex flex-col',
+          'transition-colors min-h-0 h-full',
           isCurrentMonth ? 'bg-white' : 'bg-gray-50',
-          items.length > 0 && 'cursor-pointer hover:bg-gray-50',
           !isCurrentMonth && 'text-gray-400'
         )}
       >
         {/* Date number */}
-        <div
-          className={cn(
-            'text-sm font-medium',
-            isMonthly ? 'mb-1' : 'mb-2',
-            isToday &&
-              'bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center'
-          )}
-        >
-          {date.getDate()}
+        <div className="flex-shrink-0 p-2 pb-1">
+          <div
+            className={cn(
+              'text-sm font-medium inline-flex items-center justify-center',
+              isToday && 'bg-blue-600 text-white w-6 h-6 rounded-full'
+            )}
+          >
+            {date.getDate()}
+          </div>
         </div>
 
-        {/* Action item dots */}
+        {/* Action item cards - scrollable container */}
         {items.length > 0 && (
-          <div className={cn('flex flex-wrap gap-1', isMonthly ? 'gap-0.5' : 'gap-1')}>
-            {visibleItems.map((itemWithContext) => {
-              const color = getContextColor(itemWithContext.context);
-              const isCompleted = itemWithContext.item.status === 'completed';
-
-              return (
-                <div
-                  key={itemWithContext.item.id}
-                  className={cn(
-                    'rounded-full flex-shrink-0',
-                    isMonthly ? 'w-2 h-2' : 'w-2.5 h-2.5',
-                    isCompleted && 'opacity-50'
-                  )}
-                  style={{ backgroundColor: color }}
-                  title={itemWithContext.item.title}
-                />
-              );
-            })}
-
-            {/* +N more indicator */}
-            {remainingCount > 0 && (
-              <span className="text-xs text-gray-500 font-medium">+{remainingCount}</span>
-            )}
+          <div className="flex-1 overflow-y-auto px-1.5 pb-1.5 space-y-1 min-h-0">
+            {items.map((itemWithContext) => (
+              <ActionItemCard
+                key={itemWithContext.item.id}
+                itemWithContext={itemWithContext}
+                onClick={(e: React.MouseEvent) => handleCardClick(itemWithContext, e)}
+              />
+            ))}
           </div>
         )}
       </div>
 
-      {/* Popover for showing action items */}
+      {/* Popover for showing action item details */}
       <ActionItemPopover
-        items={items}
+        items={selectedItems}
         isOpen={isPopoverOpen}
         onClose={handleClose}
         anchorRect={anchorRect}
