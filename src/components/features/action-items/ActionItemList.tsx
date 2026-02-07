@@ -7,9 +7,20 @@ interface ActionItemListProps {
   onAdd: (title: string, priority?: Priority, dueDate?: string) => void;
   onToggleStatus: (itemId: string) => void;
   onDelete: (itemId: string) => void;
+  onAddChecklistItem: (itemId: string, text: string) => void;
+  onToggleChecklistItem: (itemId: string, checklistItemId: string) => void;
+  onDeleteChecklistItem: (itemId: string, checklistItemId: string) => void;
 }
 
-export function ActionItemList({ items, onAdd, onToggleStatus, onDelete }: ActionItemListProps) {
+export function ActionItemList({
+  items,
+  onAdd,
+  onToggleStatus,
+  onDelete,
+  onAddChecklistItem,
+  onToggleChecklistItem,
+  onDeleteChecklistItem,
+}: ActionItemListProps) {
   const pendingItems = items.filter((item) => item.status !== 'completed');
   const completedItems = items.filter((item) => item.status === 'completed');
 
@@ -29,6 +40,13 @@ export function ActionItemList({ items, onAdd, onToggleStatus, onDelete }: Actio
             item={item}
             onToggleStatus={() => onToggleStatus(item.id)}
             onDelete={() => onDelete(item.id)}
+            onAddChecklistItem={(text) => onAddChecklistItem(item.id, text)}
+            onToggleChecklistItem={(checklistItemId) =>
+              onToggleChecklistItem(item.id, checklistItemId)
+            }
+            onDeleteChecklistItem={(checklistItemId) =>
+              onDeleteChecklistItem(item.id, checklistItemId)
+            }
           />
         ))}
 
@@ -46,6 +64,13 @@ export function ActionItemList({ items, onAdd, onToggleStatus, onDelete }: Actio
                   item={item}
                   onToggleStatus={() => onToggleStatus(item.id)}
                   onDelete={() => onDelete(item.id)}
+                  onAddChecklistItem={(text) => onAddChecklistItem(item.id, text)}
+                  onToggleChecklistItem={(checklistItemId) =>
+                    onToggleChecklistItem(item.id, checklistItemId)
+                  }
+                  onDeleteChecklistItem={(checklistItemId) =>
+                    onDeleteChecklistItem(item.id, checklistItemId)
+                  }
                 />
               ))}
             </div>

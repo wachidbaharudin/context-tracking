@@ -2,6 +2,12 @@ export type ContextStatus = 'ongoing' | 'completed';
 export type ActionItemStatus = 'pending' | 'ongoing' | 'completed';
 export type Priority = 'low' | 'medium' | 'high';
 
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
 export interface ActionItem {
   id: string;
   title: string;
@@ -9,6 +15,7 @@ export interface ActionItem {
   priority?: Priority;
   dueDate?: string;
   notes?: string;
+  checklist?: ChecklistItem[];
   createdAt: string;
   updatedAt: string;
 }

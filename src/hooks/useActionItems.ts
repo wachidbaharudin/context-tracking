@@ -17,6 +17,9 @@ interface UseActionItemsResult {
   ) => void;
   deleteActionItem: (itemId: string) => void;
   toggleActionItemStatus: (itemId: string) => void;
+  addChecklistItem: (actionItemId: string, text: string) => string;
+  toggleChecklistItem: (actionItemId: string, checklistItemId: string) => void;
+  deleteChecklistItem: (actionItemId: string, checklistItemId: string) => void;
 }
 
 export function useActionItems({
@@ -108,11 +111,73 @@ export function useActionItems({
     [contextId, changeDoc]
   );
 
+  const addChecklistItem = useCallback(
+    (actionItemId: string, text: string): string => {
+      const id = uuidv4();
+      changeDoc((d) => {
+        if (d.contexts[contextId]) {
+          const item = d.contexts[contextId].actionItems.find((i) => i.id === actionItemId);
+          if (item) {
+            if (!item.checklist) {
+              item.checklist = [];
+            }
+            item.checklist.push({ id, text, done: false });
+            item.updatedAt = new Date().toISOString();
+            d.contexts[contextId].updatedAt = new Date().toISOString();
+          }
+        }
+      });
+      return id;
+    },
+    [contextId, changeDoc]
+  );
+
+  const toggleChecklistItem = useCallback(
+    (actionItemId: string, checklistItemId: string) => {
+      changeDoc((d) => {
+        if (d.contexts[contextId]) {
+          const item = d.contexts[contextId].actionItems.find((i) => i.id === actionItemId);
+          if (item?.checklist) {
+            const checklistItem = item.checklist.find((c) => c.id === checklistItemId);
+            if (checklistItem) {
+              checklistItem.done = !checklistItem.done;
+              item.updatedAt = new Date().toISOString();
+              d.contexts[contextId].updatedAt = new Date().toISOString();
+            }
+          }
+        }
+      });
+    },
+    [contextId, changeDoc]
+  );
+
+  const deleteChecklistItem = useCallback(
+    (actionItemId: string, checklistItemId: string) => {
+      changeDoc((d) => {
+        if (d.contexts[contextId]) {
+          const item = d.contexts[contextId].actionItems.find((i) => i.id === actionItemId);
+          if (item?.checklist) {
+            const index = item.checklist.findIndex((c) => c.id === checklistItemId);
+            if (index !== -1) {
+              item.checklist.splice(index, 1);
+              item.updatedAt = new Date().toISOString();
+              d.contexts[contextId].updatedAt = new Date().toISOString();
+            }
+          }
+        }
+      });
+    },
+    [contextId, changeDoc]
+  );
+
   return {
     actionItems,
     addActionItem,
     updateActionItem,
     deleteActionItem,
     toggleActionItemStatus,
+    addChecklistItem,
+    toggleChecklistItem,
+    deleteChecklistItem,
   };
 }

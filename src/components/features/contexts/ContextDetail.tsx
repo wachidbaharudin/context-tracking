@@ -22,7 +22,15 @@ export function ContextDetail({
   onToggleStatus,
   onDelete,
 }: ContextDetailProps) {
-  const { actionItems, addActionItem, toggleActionItemStatus, deleteActionItem } = useActionItems({
+  const {
+    actionItems,
+    addActionItem,
+    toggleActionItemStatus,
+    deleteActionItem,
+    addChecklistItem,
+    toggleChecklistItem,
+    deleteChecklistItem,
+  } = useActionItems({
     contextId: context.id,
     doc,
     changeDoc,
@@ -99,6 +107,9 @@ export function ContextDetail({
           onAdd={addActionItem}
           onToggleStatus={toggleActionItemStatus}
           onDelete={deleteActionItem}
+          onAddChecklistItem={addChecklistItem}
+          onToggleChecklistItem={toggleChecklistItem}
+          onDeleteChecklistItem={deleteChecklistItem}
         />
 
         <LinkList links={links} onAdd={addLink} onDelete={deleteLink} />

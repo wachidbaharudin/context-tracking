@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import type { Priority } from '@/types';
 
 interface AddActionItemProps {
@@ -25,8 +24,9 @@ export function AddActionItem({ onAdd }: AddActionItemProps) {
     setIsExpanded(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSubmit(e);
     }
     if (e.key === 'Escape') {
@@ -50,12 +50,14 @@ export function AddActionItem({ onAdd }: AddActionItemProps) {
       onSubmit={handleSubmit}
       className="p-3 rounded-md border border-gray-200 bg-gray-50 space-y-3"
     >
-      <Input
-        placeholder="What needs to be done?"
+      <textarea
+        placeholder="What needs to be done? (Shift+Enter for new line)"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={handleKeyDown}
         autoFocus
+        rows={2}
+        className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
       />
 
       <div className="flex gap-3">
