@@ -61,14 +61,19 @@ export function useContexts({ doc, changeDoc }: UseContextsProps): UseContextsRe
         d.contexts[id] = {
           id,
           name,
-          description,
-          color,
           status: 'ongoing',
           actionItems: [],
           links: [],
           createdAt: now,
           updatedAt: now,
         };
+        // Only set optional fields if they have values (Automerge doesn't allow undefined)
+        if (description) {
+          d.contexts[id].description = description;
+        }
+        if (color) {
+          d.contexts[id].color = color;
+        }
       });
 
       return id;

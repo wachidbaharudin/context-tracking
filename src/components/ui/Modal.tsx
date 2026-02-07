@@ -38,7 +38,8 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Focus trap should only run when modal opens, not when onClose changes
+  }, [isOpen]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === overlayRef.current) {
