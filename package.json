@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:gh-pages": "vite preview --base=/context-tracking/",
     "prepare": "husky",
     "test": "vitest",
     "test:ui": "vitest --ui",

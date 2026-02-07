@@ -5,6 +5,7 @@ import wasm from 'vite-plugin-wasm';
 import path from 'path';
 
 export default defineConfig({
+  base: '/context-tracking/',
   plugins: [wasm(), react(), tailwindcss()],
   resolve: {
     alias: {
