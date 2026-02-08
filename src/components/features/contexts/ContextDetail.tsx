@@ -5,6 +5,7 @@ import { TimesheetList } from '@/components/features/timesheet';
 import { useActionItems, useLinks, useTimesheet } from '@/hooks';
 import { cn, formatDate } from '@/lib/utils';
 import type { Context, AppDocument } from '@/types';
+import { useState, useEffect, useCallback } from 'react';
 
 interface ContextDetailProps {
   context: Context;
@@ -25,6 +26,7 @@ export function ContextDetail({
   onDelete,
   onBack,
 }: ContextDetailProps) {
+  const [activeTab, setActiveTab] = useState('action-items');
   const {
     actionItems,
     addActionItem,
@@ -51,6 +53,7 @@ export function ContextDetail({
     timesheetEnabled,
     timesheetEntries,
     activeTimerStart,
+    activeTimerDescription,
     toggleTimesheet,
     startTimer,
     stopTimer,
@@ -61,6 +64,35 @@ export function ContextDetail({
     doc,
     changeDoc,
   });
+
+  // Calculate elapsed time for active timer indicator
+  const calculateElapsed = useCallback((startTimeString: string): string => {
+    const startTime = new Date(startTimeString).getTime();
+    const now = Date.now();
+    const diff = now - startTime;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, []);
+
+  const [elapsed, setElapsed] = useState(() =>
+    activeTimerStart ? calculateElapsed(activeTimerStart) : '0:00:00'
+  );
+
+  useEffect(() => {
+    if (!activeTimerStart) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setElapsed(calculateElapsed(activeTimerStart));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeTimerStart, calculateElapsed]);
 
   // Calculate counts for tab badges
   const pendingActionItems = actionItems.filter((item) => item.status === 'pending').length;
@@ -133,6 +165,21 @@ export function ContextDetail({
             {context.description && (
               <p className="mt-2 text-base text-gray-600">{context.description}</p>
             )}
+            {/* Active timer indicator */}
+            {activeTimerStart && (
+              <button
+                onClick={() => setActiveTab('timesheet')}
+                className="mt-3 w-full p-3 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors text-left"
+              >
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="font-medium text-blue-700">Recording: {elapsed}</span>
+                  {activeTimerDescription && (
+                    <span className="text-blue-600">- {activeTimerDescription}</span>
+                  )}
+                </div>
+              </button>
+            )}
             {/* Metadata - Level 5/6 hierarchy, pushed to background */}
             <p className="mt-3 text-[11px] text-gray-400">
               Created {formatDate(context.createdAt)} · Updated {formatDate(context.updatedAt)}
@@ -162,7 +209,7 @@ export function ContextDetail({
       </div>
 
       {/* Content with Tabs */}
-      <Tabs key={context.id} defaultValue="action-items" className="flex-1">
+      <Tabs key={context.id} value={activeTab} onValueChange={setActiveTab} className="flex-1">
         <TabsList>
           <TabsTrigger value="action-items">
             Action Items {pendingActionItems > 0 && `(${pendingActionItems})`}
@@ -199,6 +246,7 @@ export function ContextDetail({
               contextName={context.name}
               entries={timesheetEntries}
               activeTimerStart={activeTimerStart}
+              activeTimerDescription={activeTimerDescription}
               onStart={startTimer}
               onStop={stopTimer}
               onUpdate={updateEntry}

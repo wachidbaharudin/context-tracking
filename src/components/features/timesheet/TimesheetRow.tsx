@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
 import { calculateDuration, formatDuration, formatTimeRange } from '@/lib/utils/timesheetUtils';
 import type { TimesheetEntry } from '@/types';
@@ -15,6 +14,28 @@ export function TimesheetRow({ entry, onDelete, onUpdate }: TimesheetRowProps) {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState(entry.description || '');
   const duration = calculateDuration(entry.startTime, entry.endTime);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
+    }
+    if (e.key === 'Escape') {
+      setDescriptionValue(entry.description || '');
+      setIsEditingDescription(false);
+    }
+  };
+
+  const handleSave = () => {
+    const trimmedDescription = descriptionValue.trim();
+    onUpdate({ description: trimmedDescription || undefined });
+    setIsEditingDescription(false);
+  };
+
+  const handleCancel = () => {
+    setDescriptionValue(entry.description || '');
+    setIsEditingDescription(false);
+  };
 
   return (
     <div
@@ -70,30 +91,24 @@ export function TimesheetRow({ entry, onDelete, onUpdate }: TimesheetRowProps) {
       {/* Second line: description (editable) */}
       {isEditingDescription ? (
         <div className="flex gap-2">
-          <Input
+          <textarea
             value={descriptionValue}
             onChange={(e) => setDescriptionValue(e.target.value)}
-            placeholder="What did you work on?"
+            onKeyDown={handleKeyDown}
+            placeholder="What did you work on? (Shift+Enter for new line)"
             autoFocus
-            className="flex-1 text-[11px]"
+            rows={3}
+            className={cn(
+              'flex flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3',
+              'text-base placeholder:text-gray-400 resize-none',
+              'focus:outline-none focus:ring-2 focus:ring-blue-500',
+              'md:rounded-md md:px-3 md:py-2 md:text-sm'
+            )}
           />
-          <Button
-            size="sm"
-            onClick={() => {
-              onUpdate({ description: descriptionValue.trim() || undefined });
-              setIsEditingDescription(false);
-            }}
-          >
+          <Button size="sm" onClick={handleSave}>
             Save
           </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => {
-              setDescriptionValue(entry.description || '');
-              setIsEditingDescription(false);
-            }}
-          >
+          <Button size="sm" variant="ghost" onClick={handleCancel}>
             Cancel
           </Button>
         </div>

@@ -1,16 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
 interface TimesheetTimerProps {
   activeTimerStart: string | null;
-  onStart: () => void;
+  activeTimerDescription?: string | null;
+  onStart: (description?: string) => void;
   onStop: () => void;
 }
 
-export function TimesheetTimer({ activeTimerStart, onStart, onStop }: TimesheetTimerProps) {
+export function TimesheetTimer({
+  activeTimerStart,
+  activeTimerDescription,
+  onStart,
+  onStop,
+}: TimesheetTimerProps) {
+  const [description, setDescription] = useState('');
+
   // Calculate initial elapsed value without using state in effect
-  const calculateElapsed = (startTimeString: string | null): string => {
+  const calculateElapsed = useCallback((startTimeString: string | null): string => {
     if (!startTimeString) return '0:00:00';
 
     const startTime = new Date(startTimeString).getTime();
@@ -22,7 +30,7 @@ export function TimesheetTimer({ activeTimerStart, onStart, onStop }: TimesheetT
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
   const [elapsed, setElapsed] = useState(() => calculateElapsed(activeTimerStart));
 
@@ -42,7 +50,7 @@ export function TimesheetTimer({ activeTimerStart, onStart, onStop }: TimesheetT
     const interval = setInterval(updateElapsed, 1000);
 
     return () => clearInterval(interval);
-  }, [activeTimerStart]);
+  }, [activeTimerStart, calculateElapsed]);
 
   const formatStartTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -53,20 +61,50 @@ export function TimesheetTimer({ activeTimerStart, onStart, onStop }: TimesheetT
     return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
   };
 
-  // Idle state: Show Start button
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onStart(description);
+      setDescription('');
+    }
+  };
+
+  const handleStartClick = () => {
+    onStart(description);
+    setDescription('');
+  };
+
+  const handleStopClick = () => {
+    onStop();
+  };
+
+  // Idle state: Show Start button with description input
   if (!activeTimerStart) {
     return (
-      <button
-        onClick={onStart}
-        className={cn(
-          'w-full p-4 text-left text-base text-gray-500 rounded-md border border-dashed border-gray-300',
-          'min-h-[44px] active:bg-gray-100',
-          'hover:border-gray-400 hover:bg-gray-50 transition-colors',
-          'md:p-3 md:text-sm'
-        )}
-      >
-        ▶ Start timer
-      </button>
+      <div className="flex gap-2">
+        <textarea
+          placeholder="What are you working on? (Shift+Enter for new line)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          onKeyDown={handleKeyDown}
+          rows={1}
+          className={cn(
+            'flex flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3',
+            'text-base placeholder:text-gray-400 resize-none',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500',
+            'md:rounded-md md:px-3 md:py-2 md:text-sm'
+          )}
+        />
+        <Button
+          type="button"
+          onClick={handleStartClick}
+          variant="primary"
+          size="sm"
+          className="min-h-[44px] text-base px-6 md:min-h-0 md:text-sm md:px-4"
+        >
+          ▶ Start
+        </Button>
+      </div>
     );
   }
 
@@ -83,10 +121,14 @@ export function TimesheetTimer({ activeTimerStart, onStart, onStop }: TimesheetT
             <div className="text-sm text-gray-600 md:text-xs">
               Started at {formatStartTime(activeTimerStart)}
             </div>
+            {activeTimerDescription && (
+              <div className="text-sm text-gray-600 md:text-xs mt-1">{activeTimerDescription}</div>
+            )}
           </div>
         </div>
         <Button
-          onClick={onStop}
+          type="button"
+          onClick={handleStopClick}
           variant="danger"
           size="sm"
           className="min-h-[44px] text-base md:min-h-0 md:text-sm bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"

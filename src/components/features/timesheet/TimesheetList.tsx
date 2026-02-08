@@ -11,7 +11,8 @@ interface TimesheetListProps {
   contextName: string;
   entries: TimesheetEntry[];
   activeTimerStart: string | null;
-  onStart: () => void;
+  activeTimerDescription?: string | null;
+  onStart: (description?: string) => void;
   onStop: () => void;
   onUpdate: (entryId: string, updates: Partial<Omit<TimesheetEntry, 'id' | 'createdAt'>>) => void;
   onDelete: (entryId: string) => void;
@@ -24,6 +25,7 @@ export function TimesheetList({
   contextName,
   entries,
   activeTimerStart,
+  activeTimerDescription,
   onStart,
   onStop,
   onUpdate,
@@ -64,7 +66,12 @@ export function TimesheetList({
       {/* Summary at the top */}
       <TimesheetSummary entries={entries} />
 
-      <TimesheetTimer activeTimerStart={activeTimerStart} onStart={onStart} onStop={onStop} />
+      <TimesheetTimer
+        activeTimerStart={activeTimerStart}
+        activeTimerDescription={activeTimerDescription}
+        onStart={onStart}
+        onStop={onStop}
+      />
 
       <div className="space-y-2 md:space-y-3">
         {sortedEntries.map((entry) => (

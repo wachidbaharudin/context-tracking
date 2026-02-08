@@ -57,6 +57,7 @@ export interface Context {
   timesheetEnabled?: boolean;
   timesheetEntries?: TimesheetEntry[];
   activeTimerStart?: string; // ISO datetime when timer was started, undefined when no timer running
+  activeTimerDescription?: string; // Description for active timer
   invoiceSettings?: InvoiceSettings;
   createdAt: string;
   updatedAt: string;
