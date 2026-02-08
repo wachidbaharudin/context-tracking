@@ -10,10 +10,12 @@ interface LinkListProps {
 
 export function LinkList({ links, onAdd, onDelete }: LinkListProps) {
   return (
-    <div className="w-full space-y-3 px-2 py-3 md:space-y-4 md:px-4 md:py-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900 md:text-base">Links</h3>
-        <span className="text-xs text-gray-500 md:text-sm">
+    <div className="w-full space-y-4 px-2 py-3 md:space-y-4 md:px-0 md:py-0">
+      {/* Section header - Level 2 hierarchy */}
+      <div className="flex items-center justify-between pb-2">
+        <h3 className="text-lg font-semibold text-gray-900">Links</h3>
+        {/* Counter - Level 6, subtle metadata */}
+        <span className="text-[11px] text-gray-400">
           {links.length} link{links.length !== 1 ? 's' : ''}
         </span>
       </div>

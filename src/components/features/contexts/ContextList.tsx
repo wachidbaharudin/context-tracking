@@ -26,8 +26,9 @@ export function ContextList({
 }: ContextListProps) {
   return (
     <div className="flex flex-col h-full w-full md:w-64 lg:w-72">
-      <div className="p-4 md:p-4 border-b border-gray-200">
-        <h1 className="text-xl md:text-lg font-semibold text-gray-900">Contexts</h1>
+      {/* Sidebar title - Level 1 hierarchy, a clear landmark */}
+      <div className="p-4 md:p-4 border-b border-gray-100">
+        <h1 className="text-lg font-bold text-gray-900">Contexts</h1>
       </div>
 
       <div className="p-3 md:p-2 space-y-2 md:space-y-1">
@@ -41,7 +42,9 @@ export function ContextList({
             onClick={onCalendarClick}
             className={cn(
               'w-full flex items-center gap-2 px-3 py-3 md:py-2 rounded-md text-base md:text-sm font-medium transition-colors min-h-[44px] md:min-h-0',
-              isCalendarActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+              isCalendarActive
+                ? 'bg-blue-50 text-blue-600'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
             )}
           >
             <svg
@@ -65,7 +68,8 @@ export function ContextList({
       <div className="flex-1 overflow-y-auto p-3 md:p-2">
         {ongoingContexts.length > 0 && (
           <div className="mb-6 md:mb-4">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 md:mb-1">
+            {/* Section label - Level 6, subtle divider */}
+            <h2 className="text-[11px] font-medium text-gray-400 uppercase tracking-wider px-3 mb-2 md:mb-1">
               Ongoing
             </h2>
             <div className="space-y-1 md:space-y-0.5">
@@ -84,7 +88,8 @@ export function ContextList({
 
         {completedContexts.length > 0 && (
           <div>
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 md:mb-1">
+            {/* Section label - Level 6, subtle divider */}
+            <h2 className="text-[11px] font-medium text-gray-400 uppercase tracking-wider px-3 mb-2 md:mb-1">
               Completed
             </h2>
             <div className="space-y-1 md:space-y-0.5">

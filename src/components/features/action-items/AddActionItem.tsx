@@ -40,11 +40,11 @@ export function AddActionItem({ onAdd }: AddActionItemProps) {
       <button
         onClick={() => setIsExpanded(true)}
         className={cn(
-          'w-full min-h-[52px] p-4 text-left text-base text-gray-500',
-          'rounded-lg border-2 border-dashed border-gray-300',
-          'active:border-gray-400 active:bg-gray-50 transition-colors',
-          'md:min-h-0 md:p-3 md:text-sm md:rounded-md md:border',
-          'md:hover:border-gray-400 md:hover:bg-gray-50'
+          'w-full min-h-[52px] p-4 text-left text-sm text-gray-400',
+          'rounded-lg border border-dashed border-gray-200',
+          'active:border-gray-300 active:bg-gray-50 transition-colors',
+          'md:min-h-0 md:p-3 md:text-sm md:rounded-md',
+          'md:hover:border-gray-300 md:hover:bg-gray-50'
         )}
       >
         + Add action item

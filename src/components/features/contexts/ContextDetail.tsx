@@ -27,11 +27,13 @@ export function ContextDetail({
   const {
     actionItems,
     addActionItem,
+    updateActionItem,
     toggleActionItemStatus,
     deleteActionItem,
     addChecklistItem,
     toggleChecklistItem,
     deleteChecklistItem,
+    updateChecklistItem,
   } = useActionItems({
     contextId: context.id,
     doc,
@@ -73,24 +75,26 @@ export function ContextDetail({
       )}
 
       {/* Header */}
-      <div className={cn('p-4 md:p-6 border-b border-gray-200', onBack && 'hidden md:block')}>
+      <div className={cn('p-4 md:p-6 border-b border-gray-100', onBack && 'hidden md:block')}>
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="flex-1 min-w-0">
+            {/* Context name - Level 1 hierarchy, the focal point */}
             <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <h2
-                className="text-lg md:text-xl font-semibold text-gray-900 truncate"
+                className="text-xl md:text-2xl font-bold text-gray-900 truncate"
                 style={context.color ? { color: context.color } : undefined}
               >
                 {context.name}
               </h2>
+              {/* Status badge - subtle, de-emphasized */}
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0',
+                  'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0',
                   context.status === 'completed'
-                    ? 'bg-gray-100 text-gray-600'
+                    ? 'bg-gray-50 text-gray-500'
                     : isStalled
-                      ? 'bg-amber-100 text-amber-700'
-                      : 'bg-green-100 text-green-700'
+                      ? 'bg-amber-50 text-amber-600'
+                      : 'bg-green-50 text-green-600'
                 )}
               >
                 <span
@@ -99,27 +103,30 @@ export function ContextDetail({
                     context.status === 'completed'
                       ? 'bg-gray-400'
                       : isStalled
-                        ? 'bg-amber-500'
-                        : 'bg-green-500'
+                        ? 'bg-amber-400'
+                        : 'bg-green-400'
                   )}
                 />
                 {context.status === 'completed' ? 'Completed' : isStalled ? 'Stalled' : 'Ongoing'}
               </span>
             </div>
+            {/* Description - Level 4 hierarchy, secondary content */}
             {context.description && (
-              <p className="mt-1 text-sm text-gray-600">{context.description}</p>
+              <p className="mt-2 text-base text-gray-600">{context.description}</p>
             )}
-            <p className="mt-2 text-xs text-gray-400">
+            {/* Metadata - Level 5/6 hierarchy, pushed to background */}
+            <p className="mt-3 text-[11px] text-gray-400">
               Created {formatDate(context.createdAt)} · Updated {formatDate(context.updatedAt)}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Actions - grouped and de-emphasized */}
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Button
               variant="secondary"
               size="sm"
               onClick={onToggleStatus}
-              className="min-h-[44px] md:min-h-0 text-sm"
+              className="min-h-[44px] md:min-h-0 text-sm text-gray-600"
             >
               Mark as {context.status === 'ongoing' ? 'Completed' : 'Ongoing'}
             </Button>
@@ -127,7 +134,7 @@ export function ContextDetail({
               variant="ghost"
               size="sm"
               onClick={onDelete}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50 min-h-[44px] md:min-h-0"
+              className="text-gray-400 hover:text-red-600 hover:bg-red-50 min-h-[44px] md:min-h-0"
             >
               Delete
             </Button>
@@ -135,16 +142,18 @@ export function ContextDetail({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 md:space-y-8">
+      {/* Content - increased spacing between major sections */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-8 md:space-y-12">
         <ActionItemList
           items={actionItems}
           onAdd={addActionItem}
           onToggleStatus={toggleActionItemStatus}
           onDelete={deleteActionItem}
+          onUpdate={updateActionItem}
           onAddChecklistItem={addChecklistItem}
           onToggleChecklistItem={toggleChecklistItem}
           onDeleteChecklistItem={deleteChecklistItem}
+          onUpdateChecklistItem={updateChecklistItem}
         />
 
         <LinkList links={links} onAdd={addLink} onDelete={deleteLink} />

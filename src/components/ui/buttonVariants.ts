@@ -5,10 +5,15 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-500',
-        ghost: 'hover:bg-gray-100 focus-visible:ring-gray-500',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
+        // Primary: The main CTA - stands out clearly
+        primary:
+          'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500 shadow-sm font-semibold',
+        // Secondary: Important but not the main action
+        secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus-visible:ring-gray-500',
+        // Ghost: Subtle, appears on interaction - de-emphasized by default
+        ghost: 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus-visible:ring-gray-500',
+        // Danger: Destructive actions - subtle until hovered
+        danger: 'text-gray-400 hover:text-red-600 hover:bg-red-50 focus-visible:ring-red-500',
       },
       size: {
         sm: 'min-h-[44px] px-3 py-2 text-sm md:min-h-0 md:h-8 md:py-0',

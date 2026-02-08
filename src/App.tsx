@@ -178,7 +178,7 @@ function App() {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 border-r border-gray-200 bg-gray-50 flex-shrink-0 flex flex-col">
+        <aside className="w-64 border-r border-gray-100 bg-gray-50/50 flex-shrink-0 flex flex-col">
           <ContextList
             ongoingContexts={ongoingContexts}
             completedContexts={completedContexts}
@@ -214,10 +214,10 @@ function App() {
               onDelete={() => handleDeleteContext(selectedContext.id)}
             />
           ) : (
-            <div className="h-full flex items-center justify-center text-gray-500">
+            <div className="h-full flex items-center justify-center text-gray-400">
               <div className="text-center">
                 <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
+                  className="mx-auto h-12 w-12 text-gray-200"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -229,8 +229,8 @@ function App() {
                     d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
                   />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No context selected</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <h3 className="mt-2 text-sm font-medium text-gray-500">No context selected</h3>
+                <p className="mt-1 text-sm text-gray-400">
                   Select a context from the sidebar or create a new one.
                 </p>
               </div>

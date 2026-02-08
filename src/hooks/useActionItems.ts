@@ -20,6 +20,7 @@ interface UseActionItemsResult {
   addChecklistItem: (actionItemId: string, text: string) => string;
   toggleChecklistItem: (actionItemId: string, checklistItemId: string) => void;
   deleteChecklistItem: (actionItemId: string, checklistItemId: string) => void;
+  updateChecklistItem: (actionItemId: string, checklistItemId: string, text: string) => void;
 }
 
 export function useActionItems({
@@ -170,6 +171,25 @@ export function useActionItems({
     [contextId, changeDoc]
   );
 
+  const updateChecklistItem = useCallback(
+    (actionItemId: string, checklistItemId: string, text: string) => {
+      changeDoc((d) => {
+        if (d.contexts[contextId]) {
+          const item = d.contexts[contextId].actionItems.find((i) => i.id === actionItemId);
+          if (item?.checklist) {
+            const checklistItem = item.checklist.find((c) => c.id === checklistItemId);
+            if (checklistItem) {
+              checklistItem.text = text;
+              item.updatedAt = new Date().toISOString();
+              d.contexts[contextId].updatedAt = new Date().toISOString();
+            }
+          }
+        }
+      });
+    },
+    [contextId, changeDoc]
+  );
+
   return {
     actionItems,
     addActionItem,
@@ -179,5 +199,6 @@ export function useActionItems({
     addChecklistItem,
     toggleChecklistItem,
     deleteChecklistItem,
+    updateChecklistItem,
   };
 }

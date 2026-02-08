@@ -19,16 +19,17 @@ export function LinkRow({ link, onDelete }: LinkRowProps) {
   return (
     <div
       className={cn(
-        'flex flex-col gap-2 p-3 rounded-md border border-gray-200 bg-white transition-colors group',
+        'flex flex-col gap-2 p-3 rounded-md border border-gray-100 bg-white transition-colors group',
         'min-h-[44px]',
         'md:flex-row md:items-center md:gap-3 md:p-3',
-        'hover:border-gray-300'
+        'hover:border-gray-200'
       )}
     >
       <div className="flex items-start gap-3 md:flex-1 md:items-center md:min-w-0">
+        {/* Link icon - subtle */}
         <div
           className={cn(
-            'flex-shrink-0 w-10 h-10 rounded bg-gray-100 flex items-center justify-center text-gray-500',
+            'flex-shrink-0 w-10 h-10 rounded bg-gray-50 flex items-center justify-center text-gray-300',
             'md:w-8 md:h-8'
           )}
         >
@@ -47,27 +48,31 @@ export function LinkRow({ link, onDelete }: LinkRowProps) {
         </div>
 
         <div className="flex-1 min-w-0">
+          {/* Link title - primary focus */}
           <a
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              'text-base font-medium text-blue-600 hover:text-blue-800 hover:underline truncate block',
+              'text-base font-medium text-blue-600 hover:text-blue-700 hover:underline truncate block',
               'min-h-[44px] flex items-center',
               'md:text-sm md:min-h-0'
             )}
           >
             {link.title}
           </a>
+          {/* Description - Level 5, secondary */}
           {link.description && (
-            <p className="text-sm text-gray-500 truncate md:text-xs">{link.description}</p>
+            <p className="text-[11px] text-gray-400 truncate">{link.description}</p>
           )}
-          <p className="text-sm text-gray-400 truncate max-w-[200px] md:text-xs md:max-w-none">
+          {/* URL - Level 6, tertiary */}
+          <p className="text-[11px] text-gray-300 truncate max-w-[200px] md:max-w-none">
             {link.url}
           </p>
         </div>
       </div>
 
+      {/* Action buttons - de-emphasized */}
       <div
         className={cn(
           'flex items-center gap-2 self-end',
@@ -80,7 +85,7 @@ export function LinkRow({ link, onDelete }: LinkRowProps) {
           size="icon"
           onClick={handleCopyUrl}
           className={cn(
-            'text-gray-400 hover:text-gray-600',
+            'text-gray-300 hover:text-gray-500',
             'min-w-[44px] min-h-[44px]',
             'md:min-w-0 md:min-h-0'
           )}
@@ -105,7 +110,7 @@ export function LinkRow({ link, onDelete }: LinkRowProps) {
           size="icon"
           onClick={onDelete}
           className={cn(
-            'text-gray-400 hover:text-red-600',
+            'text-gray-300 hover:text-red-500',
             'min-w-[44px] min-h-[44px]',
             'md:min-w-0 md:min-h-0'
           )}
