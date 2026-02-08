@@ -18,7 +18,7 @@ interface UseInvoiceProps {
 interface UseInvoiceResult {
   invoiceSettings: InvoiceSettings | null;
   updateInvoiceSettings: (settings: Partial<InvoiceSettings>) => void;
-  generateInvoice: (startDate: string, endDate: string) => void;
+  generateInvoice: (startDate: string, endDate: string, pdfPassword?: string) => void;
   getFilteredEntries: (startDate: string, endDate: string) => TimesheetEntry[];
 }
 
@@ -54,7 +54,7 @@ export function useInvoice({ contextId, doc, changeDoc }: UseInvoiceProps): UseI
   );
 
   const generateInvoice = useCallback(
-    (startDate: string, endDate: string) => {
+    (startDate: string, endDate: string, pdfPassword?: string) => {
       const filteredEntries = filterEntriesByDateRange(timesheetEntries, startDate, endDate);
       const totalHours = getTotalHours(filteredEntries);
       const hourlyRate = invoiceSettings?.hourlyRate ?? 0;
@@ -82,7 +82,7 @@ export function useInvoice({ contextId, doc, changeDoc }: UseInvoiceProps): UseI
         entries: filteredEntries,
       };
 
-      generateInvoicePDF(invoiceData);
+      generateInvoicePDF(invoiceData, pdfPassword ? { password: pdfPassword } : undefined);
     },
     [timesheetEntries, invoiceSettings, contextName]
   );

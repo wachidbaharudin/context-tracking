@@ -9,6 +9,7 @@ export function createMockDocument(contexts: Record<string, Context> = {}): AppD
     settings: {
       theme: 'light',
       defaultView: 'list',
+      autoLockMinutes: 15,
     },
   };
 }

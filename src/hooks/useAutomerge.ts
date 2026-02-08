@@ -22,7 +22,8 @@ export function useAutomerge(): UseAutomergeResult {
     const initializeDoc = async () => {
       try {
         const repo = getRepo();
-        const storedDocId = getStoredDocId();
+        // Doc ID decryption is handled internally via the worker
+        const storedDocId = await getStoredDocId();
 
         let docHandle: DocHandle<AppDocument>;
 
@@ -30,7 +31,8 @@ export function useAutomerge(): UseAutomergeResult {
           docHandle = await repo.find<AppDocument>(storedDocId as DocumentId);
         } else {
           docHandle = repo.create<AppDocument>(createInitialDocument());
-          setStoredDocId(docHandle.documentId);
+          // Doc ID encryption is handled internally via the worker
+          await setStoredDocId(docHandle.documentId);
         }
 
         handleRef.current = docHandle;

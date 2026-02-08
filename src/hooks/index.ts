@@ -9,3 +9,4 @@ export { useBreakpoint } from './useBreakpoint';
 export type { BreakpointState } from './useBreakpoint';
 export { useTimesheet } from './useTimesheet';
 export { useInvoice } from './useInvoice';
+export { useAutoLock } from './useAutoLock';

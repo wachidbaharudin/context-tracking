@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Link, AppDocument } from '@/types';
+import { validateUrl } from '@/lib/security/validate';
 
 interface UseLinksProps {
   contextId: string;
@@ -10,8 +11,8 @@ interface UseLinksProps {
 
 interface UseLinksResult {
   links: Link[];
-  addLink: (url: string, title: string, description?: string) => string;
-  updateLink: (linkId: string, updates: Partial<Omit<Link, 'id' | 'addedAt'>>) => void;
+  addLink: (url: string, title: string, description?: string) => string | null;
+  updateLink: (linkId: string, updates: Partial<Omit<Link, 'id' | 'addedAt'>>) => boolean;
   deleteLink: (linkId: string) => void;
 }
 
@@ -19,7 +20,13 @@ export function useLinks({ contextId, doc, changeDoc }: UseLinksProps): UseLinks
   const links = doc?.contexts[contextId]?.links ?? [];
 
   const addLink = useCallback(
-    (url: string, title: string, description?: string): string => {
+    (url: string, title: string, description?: string): string | null => {
+      const validation = validateUrl(url);
+      if (!validation.valid || !validation.sanitizedUrl) {
+        console.warn(`[Security] Rejected invalid URL: ${validation.error}`);
+        return null;
+      }
+
       const id = uuidv4();
       const now = new Date().toISOString();
 
@@ -27,7 +34,7 @@ export function useLinks({ contextId, doc, changeDoc }: UseLinksProps): UseLinks
         if (d.contexts[contextId]) {
           d.contexts[contextId].links.push({
             id,
-            url,
+            url: validation.sanitizedUrl!,
             title,
             description,
             addedAt: now,
@@ -42,7 +49,17 @@ export function useLinks({ contextId, doc, changeDoc }: UseLinksProps): UseLinks
   );
 
   const updateLink = useCallback(
-    (linkId: string, updates: Partial<Omit<Link, 'id' | 'addedAt'>>) => {
+    (linkId: string, updates: Partial<Omit<Link, 'id' | 'addedAt'>>): boolean => {
+      // Validate URL if it's being updated
+      if (updates.url !== undefined) {
+        const validation = validateUrl(updates.url);
+        if (!validation.valid || !validation.sanitizedUrl) {
+          console.warn(`[Security] Rejected invalid URL update: ${validation.error}`);
+          return false;
+        }
+        updates = { ...updates, url: validation.sanitizedUrl };
+      }
+
       changeDoc((d) => {
         if (d.contexts[contextId]) {
           const linkIndex = d.contexts[contextId].links.findIndex((link) => link.id === linkId);
@@ -52,6 +69,7 @@ export function useLinks({ contextId, doc, changeDoc }: UseLinksProps): UseLinks
           }
         }
       });
+      return true;
     },
     [contextId, changeDoc]
   );

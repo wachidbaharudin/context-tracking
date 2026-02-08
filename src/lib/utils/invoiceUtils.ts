@@ -93,12 +93,29 @@ interface InvoiceData {
   entries: TimesheetEntry[];
 }
 
+interface InvoicePDFOptions {
+  /** Password to encrypt the PDF. If omitted, no encryption is applied. */
+  password?: string;
+}
+
 /**
  * Generate PDF invoice
  * @param data - Invoice data
+ * @param options - Optional PDF generation options (e.g., password protection)
  */
-export function generateInvoicePDF(data: InvoiceData): void {
-  const doc = new jsPDF();
+export function generateInvoicePDF(data: InvoiceData, options?: InvoicePDFOptions): void {
+  // Configure jsPDF with optional encryption
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pdfOptions: any = {};
+  if (options?.password) {
+    pdfOptions.encryption = {
+      userPassword: options.password,
+      ownerPassword: options.password,
+      userPermissions: ['print', 'copy'],
+    };
+  }
+
+  const doc = new jsPDF(pdfOptions);
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
 
