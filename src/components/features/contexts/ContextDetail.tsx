@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/Button';
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 import { ActionItemList } from '@/components/features/action-items';
 import { LinkList } from '@/components/features/links';
 import { TimesheetList } from '@/components/features/timesheet';
@@ -61,6 +61,9 @@ export function ContextDetail({
     doc,
     changeDoc,
   });
+
+  // Calculate counts for tab badges
+  const pendingActionItems = actionItems.filter((item) => item.status === 'pending').length;
 
   return (
     <div className="h-full flex flex-col w-full">
@@ -158,46 +161,62 @@ export function ContextDetail({
         </div>
       </div>
 
-      {/* Content - increased spacing between major sections */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-8 md:space-y-12">
-        <ActionItemList
-          items={actionItems}
-          onAdd={addActionItem}
-          onToggleStatus={toggleActionItemStatus}
-          onDelete={deleteActionItem}
-          onUpdate={updateActionItem}
-          onAddChecklistItem={addChecklistItem}
-          onToggleChecklistItem={toggleChecklistItem}
-          onDeleteChecklistItem={deleteChecklistItem}
-          onUpdateChecklistItem={updateChecklistItem}
-        />
+      {/* Content with Tabs */}
+      <Tabs key={context.id} defaultValue="action-items" className="flex-1">
+        <TabsList>
+          <TabsTrigger value="action-items">
+            Action Items {pendingActionItems > 0 && `(${pendingActionItems})`}
+          </TabsTrigger>
+          <TabsTrigger value="links">Links ({links.length})</TabsTrigger>
+          <TabsTrigger value="timesheet">
+            Timesheet{' '}
+            {timesheetEnabled && timesheetEntries.length > 0 && `(${timesheetEntries.length})`}
+          </TabsTrigger>
+        </TabsList>
 
-        <LinkList links={links} onAdd={addLink} onDelete={deleteLink} />
-
-        {/* Timesheet Section */}
-        {timesheetEnabled ? (
-          <TimesheetList
-            entries={timesheetEntries}
-            activeTimerStart={activeTimerStart}
-            onStart={startTimer}
-            onStop={stopTimer}
-            onUpdate={updateEntry}
-            onDelete={deleteEntry}
+        <TabsContent value="action-items">
+          <ActionItemList
+            items={actionItems}
+            onAdd={addActionItem}
+            onToggleStatus={toggleActionItemStatus}
+            onDelete={deleteActionItem}
+            onUpdate={updateActionItem}
+            onAddChecklistItem={addChecklistItem}
+            onToggleChecklistItem={toggleChecklistItem}
+            onDeleteChecklistItem={deleteChecklistItem}
+            onUpdateChecklistItem={updateChecklistItem}
           />
-        ) : (
-          <div className="w-full px-2 py-3 md:px-0 md:py-0">
-            <button
-              onClick={toggleTimesheet}
-              className="w-full flex items-center gap-3 p-4 text-left border-2 border-dashed border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
-            >
-              <div>
-                <div className="text-sm font-medium text-gray-600">Enable timesheet tracking</div>
-                <div className="text-[11px] text-gray-400">Track time spent on this context</div>
-              </div>
-            </button>
-          </div>
-        )}
-      </div>
+        </TabsContent>
+
+        <TabsContent value="links">
+          <LinkList links={links} onAdd={addLink} onDelete={deleteLink} />
+        </TabsContent>
+
+        <TabsContent value="timesheet">
+          {timesheetEnabled ? (
+            <TimesheetList
+              entries={timesheetEntries}
+              activeTimerStart={activeTimerStart}
+              onStart={startTimer}
+              onStop={stopTimer}
+              onUpdate={updateEntry}
+              onDelete={deleteEntry}
+            />
+          ) : (
+            <div className="w-full px-2 py-3 md:px-0 md:py-0">
+              <button
+                onClick={toggleTimesheet}
+                className="w-full flex items-center gap-3 p-4 text-left border-2 border-dashed border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                <div>
+                  <div className="text-sm font-medium text-gray-600">Enable timesheet tracking</div>
+                  <div className="text-[11px] text-gray-400">Track time spent on this context</div>
+                </div>
+              </button>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

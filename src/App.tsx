@@ -3,6 +3,7 @@ import { useAutomerge, useContexts, useOnlineStatus, useBreakpoint } from '@/hoo
 import { ContextList, ContextDetail, CreateContextModal } from '@/components/features/contexts';
 import { CalendarView } from '@/components/features/calendar';
 import { MobileNav, type MobileTab } from '@/components/ui';
+import { Sidebar, SidebarNavItem } from '@/components/layout';
 import { POCDashboard } from '@/poc';
 
 type ViewMode = 'contexts' | 'calendar';
@@ -166,7 +167,7 @@ function App() {
     );
   }
 
-  // Desktop Layout (original)
+  // Desktop Layout
   return (
     <div className="h-full flex flex-col">
       {/* Online/Offline indicator */}
@@ -177,8 +178,10 @@ function App() {
       )}
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-64 border-r border-gray-100 bg-gray-50/50 flex-shrink-0 flex flex-col">
+        {/* Sidebar with new component architecture */}
+        <Sidebar
+          footer={<SidebarNavItem onClick={() => setShowPOC(true)}>Automerge POC</SidebarNavItem>}
+        >
           <ContextList
             ongoingContexts={ongoingContexts}
             completedContexts={completedContexts}
@@ -189,16 +192,7 @@ function App() {
             onCalendarClick={handleCalendarClick}
             isCalendarActive={viewMode === 'calendar'}
           />
-          {/* POC Link */}
-          <div className="mt-auto p-3 border-t border-gray-200">
-            <button
-              onClick={() => setShowPOC(true)}
-              className="w-full text-left px-3 py-2 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-            >
-              Automerge POC
-            </button>
-          </div>
-        </aside>
+        </Sidebar>
 
         {/* Main content */}
         <main className="flex-1 overflow-hidden bg-white">
