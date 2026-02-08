@@ -11,10 +11,10 @@ export const buttonVariants = cva(
         danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
       },
       size: {
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4 text-sm',
-        lg: 'h-12 px-6 text-base',
-        icon: 'h-10 w-10',
+        sm: 'min-h-[44px] px-3 py-2 text-sm md:min-h-0 md:h-8 md:py-0',
+        md: 'min-h-[44px] px-3 py-2 text-sm md:min-h-0 md:h-10 md:px-4 md:py-0',
+        lg: 'min-h-[44px] px-4 py-2 text-base md:min-h-0 md:h-12 md:px-6 md:py-0',
+        icon: 'min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 md:h-10 md:w-10',
       },
     },
     defaultVariants: {

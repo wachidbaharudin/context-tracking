@@ -57,18 +57,20 @@ export function ActionItemRow({
   return (
     <div
       className={cn(
-        'p-3 rounded-md border border-gray-200 bg-white',
-        'hover:border-gray-300 transition-colors',
+        'p-4 rounded-lg border border-gray-200 bg-white md:p-3 md:rounded-md',
+        'active:bg-gray-50 md:hover:border-gray-300 transition-colors',
         item.status === 'completed' && 'opacity-60'
       )}
     >
       {/* Main action item header */}
       <div className="flex items-start gap-3">
+        {/* Touch-friendly status toggle button */}
         <button
           onClick={onToggleStatus}
           className={cn(
-            'text-lg flex-shrink-0 w-6 h-6 flex items-center justify-center rounded mt-0.5',
-            'hover:bg-gray-100 transition-colors',
+            'text-xl flex-shrink-0 min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center rounded-lg',
+            'active:bg-gray-100 md:hover:bg-gray-100 transition-colors',
+            'md:text-lg md:w-6 md:h-6 md:min-w-0 md:min-h-0 md:rounded md:mt-0.5',
             item.status === 'completed' && 'text-green-600',
             item.status === 'ongoing' && 'text-blue-600',
             item.status === 'pending' && 'text-gray-400'
@@ -78,50 +80,58 @@ export function ActionItemRow({
           {statusIcons[item.status]}
         </button>
 
-        <div className="flex-1 min-w-0">
-          <p
-            className={cn(
-              'text-sm font-medium text-gray-900 whitespace-pre-wrap',
-              item.status === 'completed' && 'line-through text-gray-500'
+        <div className="flex-1 min-w-0 py-2 md:py-0">
+          <div className="flex flex-col gap-1 md:flex-row md:items-start md:gap-2">
+            <p
+              className={cn(
+                'text-base font-medium text-gray-900 whitespace-pre-wrap md:text-sm',
+                item.status === 'completed' && 'line-through text-gray-500'
+              )}
+            >
+              {item.title}
+            </p>
+            {item.priority && (
+              <span
+                className={cn(
+                  'self-start text-xs font-medium px-2 py-1 rounded md:py-0.5',
+                  priorityColors[item.priority]
+                )}
+              >
+                {item.priority}
+              </span>
             )}
-          >
-            {item.title}
-          </p>
+          </div>
           {(item.dueDate || item.notes) && (
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex flex-col gap-1 mt-1 md:flex-row md:items-center md:gap-2 md:mt-0.5">
               {item.dueDate && (
-                <span className="text-xs text-gray-500">
+                <span className="text-sm text-gray-500 md:text-xs">
                   Due: {new Date(item.dueDate).toLocaleDateString()}
                 </span>
               )}
-              {item.notes && <span className="text-xs text-gray-400 truncate">{item.notes}</span>}
+              {item.notes && (
+                <span className="text-sm text-gray-400 md:text-xs md:truncate">{item.notes}</span>
+              )}
             </div>
           )}
         </div>
 
-        {item.priority && (
-          <span
-            className={cn('text-xs font-medium px-2 py-0.5 rounded', priorityColors[item.priority])}
-          >
-            {item.priority}
-          </span>
-        )}
-
+        {/* Touch-friendly delete button */}
         <Button
           variant="ghost"
           size="icon"
           onClick={onDelete}
-          className="flex-shrink-0 text-gray-400 hover:text-red-600"
+          className="flex-shrink-0 min-w-[44px] min-h-[44px] w-11 h-11 text-gray-400 active:text-red-600 md:hover:text-red-600 md:w-auto md:h-auto md:min-w-0 md:min-h-0"
           aria-label="Delete action item"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
+            className="md:w-4 md:h-4"
           >
             <path d="M3 6h18" />
             <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -131,31 +141,37 @@ export function ActionItemRow({
       </div>
 
       {/* Checklist section */}
-      <div className="ml-9 mt-2">
+      <div className="ml-14 mt-3 md:ml-9 md:mt-2">
         {checklist.length > 0 && (
-          <div className="space-y-1">
+          <div className="space-y-2 md:space-y-1">
             {checklist.map((checklistItem) => (
-              <div key={checklistItem.id} className="flex items-center gap-2 group py-0.5">
+              <div
+                key={checklistItem.id}
+                className="flex items-center gap-3 group py-1 md:gap-2 md:py-0.5"
+              >
+                {/* Touch-friendly checklist toggle */}
                 <button
                   onClick={() => onToggleChecklistItem(checklistItem.id)}
                   className={cn(
-                    'w-4 h-4 rounded border flex items-center justify-center flex-shrink-0',
-                    'transition-colors',
+                    'min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg border-2 flex items-center justify-center flex-shrink-0',
+                    'transition-colors active:scale-95',
+                    'md:w-4 md:h-4 md:min-w-0 md:min-h-0 md:rounded md:border',
                     checklistItem.done
                       ? 'bg-green-500 border-green-500 text-white'
-                      : 'border-gray-300 hover:border-gray-400'
+                      : 'border-gray-300 active:border-gray-400 md:hover:border-gray-400'
                   )}
                   aria-label={checklistItem.done ? 'Mark as not done' : 'Mark as done'}
                 >
                   {checklistItem.done && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
+                      width="20"
+                      height="20"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="3"
+                      className="md:w-[10px] md:h-[10px]"
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -163,25 +179,31 @@ export function ActionItemRow({
                 </button>
                 <span
                   className={cn(
-                    'text-sm flex-1',
+                    'text-base flex-1 md:text-sm',
                     checklistItem.done && 'line-through text-gray-400'
                   )}
                 >
                   {checklistItem.text}
                 </span>
+                {/* Touch-friendly delete checklist item button */}
                 <button
                   onClick={() => onDeleteChecklistItem(checklistItem.id)}
-                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity p-0.5"
+                  className={cn(
+                    'min-w-[44px] min-h-[44px] flex items-center justify-center',
+                    'text-gray-400 active:text-red-500 transition-colors',
+                    'md:min-w-0 md:min-h-0 md:opacity-0 md:group-hover:opacity-100 md:p-0.5 md:hover:text-red-500'
+                  )}
                   aria-label="Delete checklist item"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
+                    className="md:w-3 md:h-3"
                   >
                     <path d="M18 6L6 18" />
                     <path d="M6 6l12 12" />
@@ -194,7 +216,7 @@ export function ActionItemRow({
 
         {/* Add checklist item */}
         {isAddingChecklist ? (
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex flex-col gap-2 mt-2 md:flex-row md:items-center md:mt-1">
             <input
               type="text"
               value={newChecklistText}
@@ -207,7 +229,7 @@ export function ActionItemRow({
               }}
               placeholder="Add checklist item..."
               autoFocus
-              className="flex-1 text-sm px-2 py-1 rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-1 text-base min-h-[44px] px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 md:text-sm md:min-h-0 md:px-2 md:py-1 md:rounded md:focus:ring-1"
             />
             <Button
               type="button"
@@ -215,7 +237,7 @@ export function ActionItemRow({
               size="sm"
               onClick={handleAddChecklistItem}
               disabled={!newChecklistText.trim()}
-              className="text-xs px-2 py-1 h-auto"
+              className="min-h-[44px] text-base px-4 py-2 md:min-h-0 md:text-xs md:px-2 md:py-1 md:h-auto"
             >
               Add
             </Button>
@@ -223,9 +245,9 @@ export function ActionItemRow({
         ) : (
           <button
             onClick={() => setIsAddingChecklist(true)}
-            className="text-xs text-gray-400 hover:text-gray-600 mt-1 flex items-center gap-1"
+            className="min-h-[44px] text-sm text-gray-400 active:text-gray-600 mt-2 flex items-center gap-2 md:min-h-0 md:text-xs md:gap-1 md:mt-1 md:hover:text-gray-600"
           >
-            <span>+</span>
+            <span className="text-lg md:text-base">+</span>
             <span>Add checklist item</span>
           </button>
         )}

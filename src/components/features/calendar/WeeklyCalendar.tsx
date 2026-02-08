@@ -1,4 +1,5 @@
 import { getWeekDays, toDateKey, isToday } from '@/lib/utils/calendarUtils';
+import { cn } from '@/lib/utils';
 import { CalendarDay } from './CalendarDay';
 import type { ActionItemWithContext } from '@/hooks/useAllActionItems';
 
@@ -18,7 +19,7 @@ export function WeeklyCalendar({
   const days = getWeekDays(currentDate);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={cn('flex flex-col h-full', 'hidden md:flex')}>
       {/* Weekday headers with dates */}
       <div className="grid grid-cols-7 border-b border-gray-200">
         {days.map((date, index) => (
@@ -29,7 +30,7 @@ export function WeeklyCalendar({
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               {WEEKDAY_LABELS[index]}
             </div>
-            <div className="text-sm font-medium text-gray-700 mt-0.5">
+            <div className="text-xs lg:text-sm font-medium text-gray-700 mt-0.5">
               {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </div>
           </div>

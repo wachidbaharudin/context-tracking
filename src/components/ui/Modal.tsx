@@ -53,7 +53,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 md:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
@@ -61,8 +61,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       <div
         ref={contentRef}
         className={cn(
-          'relative w-full max-w-lg rounded-lg bg-white p-6 shadow-xl',
-          'animate-in fade-in-0 zoom-in-95',
+          'relative w-full bg-white shadow-xl',
+          'h-[90vh] rounded-t-xl p-4 pt-6',
+          'md:h-auto md:max-w-lg md:rounded-lg md:p-6',
+          'animate-in fade-in-0 slide-in-from-bottom-4 md:slide-in-from-bottom-0 md:zoom-in-95',
           className
         )}
       >
@@ -73,7 +75,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
         )}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="absolute right-4 top-4 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-400 md:min-h-0 md:min-w-0"
           aria-label="Close"
         >
           <svg

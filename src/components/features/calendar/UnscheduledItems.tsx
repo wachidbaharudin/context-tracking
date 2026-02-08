@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { getContextColor } from '@/lib/utils/getContextColor';
+import { useBreakpoint } from '@/hooks';
 import type { ActionItemWithContext } from '@/hooks/useAllActionItems';
 
 interface UnscheduledItemsProps {
@@ -23,6 +24,7 @@ const priorityColors: Record<string, string> = {
 export function UnscheduledItems({ items, onSelectContext }: UnscheduledItemsProps) {
   // Default to collapsed if more than 5 items
   const [isExpanded, setIsExpanded] = useState(items.length <= 5);
+  const { isMobile } = useBreakpoint();
 
   // Group items by context
   const groupedByContext = useMemo(() => {
@@ -54,7 +56,7 @@ export function UnscheduledItems({ items, onSelectContext }: UnscheduledItemsPro
       {/* Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 active:bg-gray-100 transition-colors min-h-[44px]"
       >
         <span className="text-sm font-medium text-gray-700">Unscheduled ({items.length})</span>
         <svg
@@ -69,46 +71,31 @@ export function UnscheduledItems({ items, onSelectContext }: UnscheduledItemsPro
 
       {/* Content */}
       {isExpanded && (
-        <div className="px-4 pb-4 space-y-4">
-          {groupedByContext.map(({ context, items: contextItems }) => {
-            const contextColor = getContextColor(context);
+        <>
+          {/* Mobile: Horizontal scroll view */}
+          {isMobile ? (
+            <div className="px-4 pb-4">
+              <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+                {items.map((itemWithContext) => {
+                  const { item, context } = itemWithContext;
+                  const contextColor = getContextColor(context);
 
-            return (
-              <div key={context.id}>
-                {/* Context header */}
-                <div
-                  className={cn(
-                    'flex items-center gap-2 mb-2',
-                    onSelectContext && 'cursor-pointer hover:opacity-80'
-                  )}
-                  onClick={() => onSelectContext?.(context.id)}
-                >
-                  <span
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: contextColor }}
-                  />
-                  <span className="text-sm font-medium text-gray-900">{context.name}</span>
-                  <span className="text-xs text-gray-500">({contextItems.length})</span>
-                </div>
-
-                {/* Items list */}
-                <div className="space-y-1 ml-5">
-                  {contextItems.map((itemWithContext) => {
-                    const { item } = itemWithContext;
-
-                    return (
-                      <div
-                        key={item.id}
-                        className={cn(
-                          'flex items-center gap-2 py-1',
-                          onSelectContext && 'cursor-pointer hover:bg-gray-100 rounded px-1 -mx-1'
-                        )}
-                        onClick={() => onSelectContext?.(context.id)}
-                      >
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        'flex-shrink-0 w-64 p-3 rounded-lg bg-white border border-gray-200 shadow-sm',
+                        'active:bg-gray-50 transition-colors',
+                        onSelectContext && 'cursor-pointer'
+                      )}
+                      style={{ borderLeftColor: contextColor, borderLeftWidth: '4px' }}
+                      onClick={() => onSelectContext?.(context.id)}
+                    >
+                      <div className="flex items-start gap-2">
                         {/* Status icon */}
                         <span
                           className={cn(
-                            'text-sm flex-shrink-0',
+                            'text-sm flex-shrink-0 mt-0.5',
                             item.status === 'completed' && 'text-green-600',
                             item.status === 'ongoing' && 'text-blue-600',
                             item.status === 'pending' && 'text-gray-400'
@@ -120,7 +107,7 @@ export function UnscheduledItems({ items, onSelectContext }: UnscheduledItemsPro
                         {/* Title */}
                         <span
                           className={cn(
-                            'text-sm text-gray-700 flex-1 truncate',
+                            'text-sm text-gray-700 flex-1 line-clamp-2',
                             item.status === 'completed' && 'line-through text-gray-500'
                           )}
                         >
@@ -135,17 +122,109 @@ export function UnscheduledItems({ items, onSelectContext }: UnscheduledItemsPro
                               priorityColors[item.priority]
                             )}
                           >
-                            {item.priority}
+                            {item.priority.charAt(0).toUpperCase()}
                           </span>
                         )}
                       </div>
-                    );
-                  })}
-                </div>
+
+                      {/* Context indicator */}
+                      <div className="flex items-center gap-2 mt-2 ml-5">
+                        <span
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: contextColor }}
+                        />
+                        <span className="text-xs text-gray-500 truncate">{context.name}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+              <p className="text-xs text-gray-400 mt-2 text-center">
+                Scroll horizontally to see more
+              </p>
+            </div>
+          ) : (
+            /* Desktop: Vertical grouped list */
+            <div className="px-4 pb-4 space-y-4">
+              {groupedByContext.map(({ context, items: contextItems }) => {
+                const contextColor = getContextColor(context);
+
+                return (
+                  <div key={context.id}>
+                    {/* Context header */}
+                    <div
+                      className={cn(
+                        'flex items-center gap-2 mb-2',
+                        onSelectContext && 'cursor-pointer hover:opacity-80'
+                      )}
+                      onClick={() => onSelectContext?.(context.id)}
+                    >
+                      <span
+                        className="w-3 h-3 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: contextColor }}
+                      />
+                      <span className="text-sm font-medium text-gray-900">{context.name}</span>
+                      <span className="text-xs text-gray-500">({contextItems.length})</span>
+                    </div>
+
+                    {/* Items list */}
+                    <div className="space-y-1 ml-5">
+                      {contextItems.map((itemWithContext) => {
+                        const { item } = itemWithContext;
+
+                        return (
+                          <div
+                            key={item.id}
+                            className={cn(
+                              'flex items-center gap-2 py-1',
+                              onSelectContext &&
+                                'cursor-pointer hover:bg-gray-100 rounded px-1 -mx-1'
+                            )}
+                            onClick={() => onSelectContext?.(context.id)}
+                          >
+                            {/* Status icon */}
+                            <span
+                              className={cn(
+                                'text-sm flex-shrink-0',
+                                item.status === 'completed' && 'text-green-600',
+                                item.status === 'ongoing' && 'text-blue-600',
+                                item.status === 'pending' && 'text-gray-400'
+                              )}
+                            >
+                              {statusIcons[item.status]}
+                            </span>
+
+                            {/* Title */}
+                            <span
+                              className={cn(
+                                'text-sm text-gray-700 flex-1 truncate',
+                                item.status === 'completed' && 'line-through text-gray-500'
+                              )}
+                            >
+                              {item.title}
+                            </span>
+
+                            {/* Priority badge */}
+                            {item.priority && (
+                              <span
+                                className={cn(
+                                  'text-xs font-medium px-1.5 py-0.5 rounded flex-shrink-0',
+                                  priorityColors[item.priority]
+                                )}
+                              >
+                                {item.priority}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

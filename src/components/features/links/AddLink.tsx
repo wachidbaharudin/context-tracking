@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { cn } from '@/lib/utils';
 
 interface AddLinkProps {
   onAdd: (url: string, title: string, description?: string) => void;
@@ -53,7 +54,12 @@ export function AddLink({ onAdd }: AddLinkProps) {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="w-full p-3 text-left text-sm text-gray-500 rounded-md border border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-colors"
+        className={cn(
+          'w-full p-4 text-left text-base text-gray-500 rounded-md border border-dashed border-gray-300',
+          'min-h-[44px] active:bg-gray-100',
+          'hover:border-gray-400 hover:bg-gray-50 transition-colors',
+          'md:p-3 md:text-sm'
+        )}
       >
         + Add link
       </button>
@@ -63,7 +69,10 @@ export function AddLink({ onAdd }: AddLinkProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-3 rounded-md border border-gray-200 bg-gray-50 space-y-3"
+      className={cn(
+        'p-4 rounded-md border border-gray-200 bg-gray-50 space-y-4',
+        'md:p-3 md:space-y-3'
+      )}
     >
       <Input
         placeholder="https://example.com"
@@ -74,6 +83,7 @@ export function AddLink({ onAdd }: AddLinkProps) {
         }}
         error={error}
         autoFocus
+        className="min-h-[44px] text-base md:min-h-0 md:text-sm"
       />
 
       <Input
@@ -83,19 +93,27 @@ export function AddLink({ onAdd }: AddLinkProps) {
           setTitle(e.target.value);
           setError('');
         }}
+        className="min-h-[44px] text-base md:min-h-0 md:text-sm"
       />
 
       <Input
         placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        className="min-h-[44px] text-base md:min-h-0 md:text-sm"
       />
 
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="ghost" size="sm" onClick={() => setIsExpanded(false)}>
+      <div className="flex flex-col gap-2 md:flex-row md:justify-end">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsExpanded(false)}
+          className="min-h-[44px] text-base md:min-h-0 md:text-sm"
+        >
           Cancel
         </Button>
-        <Button type="submit" size="sm">
+        <Button type="submit" size="sm" className="min-h-[44px] text-base md:min-h-0 md:text-sm">
           Add Link
         </Button>
       </div>

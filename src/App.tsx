@@ -1,18 +1,27 @@
 import { useState } from 'react';
-import { useAutomerge, useContexts, useOnlineStatus } from '@/hooks';
+import { useAutomerge, useContexts, useOnlineStatus, useBreakpoint } from '@/hooks';
 import { ContextList, ContextDetail, CreateContextModal } from '@/components/features/contexts';
 import { CalendarView } from '@/components/features/calendar';
+import { MobileNav, type MobileTab } from '@/components/ui';
 import { POCDashboard } from '@/poc';
 
 type ViewMode = 'contexts' | 'calendar';
 
+// Mobile view states for List → Detail navigation flow
+type MobileContextView = 'list' | 'detail';
+
 function App() {
   const { doc, isLoading, error, changeDoc } = useAutomerge();
   const isOnline = useOnlineStatus();
+  const { isMobile } = useBreakpoint();
+
   const [selectedContextId, setSelectedContextId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [showPOC, setShowPOC] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('contexts');
+
+  // Mobile-specific: track if we're viewing the list or a detail
+  const [mobileContextView, setMobileContextView] = useState<MobileContextView>('list');
 
   const {
     ongoingContexts,
@@ -30,6 +39,7 @@ function App() {
     const newId = createContext(name, description, color);
     setSelectedContextId(newId);
     setViewMode('contexts');
+    setMobileContextView('detail');
   };
 
   const handleDeleteContext = (id: string) => {
@@ -37,6 +47,7 @@ function App() {
       deleteContext(id);
       if (selectedContextId === id) {
         setSelectedContextId(null);
+        setMobileContextView('list');
       }
     }
   };
@@ -44,10 +55,29 @@ function App() {
   const handleSelectContext = (contextId: string) => {
     setSelectedContextId(contextId);
     setViewMode('contexts');
+    setMobileContextView('detail');
   };
 
   const handleCalendarClick = () => {
     setViewMode('calendar');
+  };
+
+  // Mobile navigation handlers
+  const handleMobileTabChange = (tab: MobileTab) => {
+    if (tab === 'contexts') {
+      setViewMode('contexts');
+      // If no context selected, show list; otherwise stay on detail
+      if (!selectedContextId) {
+        setMobileContextView('list');
+      }
+    } else if (tab === 'calendar') {
+      setViewMode('calendar');
+    }
+  };
+
+  const handleMobileBack = () => {
+    setMobileContextView('list');
+    setSelectedContextId(null);
   };
 
   if (isLoading) {
@@ -77,6 +107,66 @@ function App() {
     return <POCDashboard onBack={() => setShowPOC(false)} />;
   }
 
+  // Mobile Layout
+  if (isMobile) {
+    return (
+      <div className="h-full flex flex-col">
+        {/* Online/Offline indicator */}
+        {!isOnline && (
+          <div className="bg-amber-100 text-amber-800 text-sm px-4 py-2 text-center">
+            You are currently offline. Changes will be saved locally.
+          </div>
+        )}
+
+        {/* Main content area - full screen with bottom padding for nav */}
+        <main className="flex-1 overflow-hidden pb-16">
+          {viewMode === 'calendar' ? (
+            <CalendarView doc={doc} onSelectContext={handleSelectContext} />
+          ) : mobileContextView === 'detail' && selectedContext ? (
+            <ContextDetail
+              context={selectedContext}
+              isStalled={stalledContextIds.has(selectedContext.id)}
+              doc={doc}
+              changeDoc={changeDoc}
+              onToggleStatus={() => toggleContextStatus(selectedContext.id)}
+              onDelete={() => handleDeleteContext(selectedContext.id)}
+              onBack={handleMobileBack}
+            />
+          ) : (
+            // Context List (full screen on mobile)
+            <div className="h-full bg-gray-50 overflow-y-auto">
+              <ContextList
+                ongoingContexts={ongoingContexts}
+                completedContexts={completedContexts}
+                stalledContextIds={stalledContextIds}
+                selectedContextId={selectedContextId}
+                onSelectContext={handleSelectContext}
+                onCreateContext={() => setIsCreateModalOpen(true)}
+                onCalendarClick={handleCalendarClick}
+                isCalendarActive={false}
+              />
+            </div>
+          )}
+        </main>
+
+        {/* Mobile Bottom Navigation */}
+        <MobileNav
+          activeTab={viewMode === 'calendar' ? 'calendar' : 'contexts'}
+          onTabChange={handleMobileTabChange}
+          onNewContext={() => setIsCreateModalOpen(true)}
+        />
+
+        {/* Create Context Modal */}
+        <CreateContextModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreateContext={handleCreateContext}
+        />
+      </div>
+    );
+  }
+
+  // Desktop Layout (original)
   return (
     <div className="h-full flex flex-col">
       {/* Online/Offline indicator */}

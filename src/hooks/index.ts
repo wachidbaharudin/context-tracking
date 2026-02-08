@@ -5,3 +5,5 @@ export { useActionItems } from './useActionItems';
 export { useLinks } from './useLinks';
 export { useAllActionItems } from './useAllActionItems';
 export type { ActionItemWithContext } from './useAllActionItems';
+export { useBreakpoint } from './useBreakpoint';
+export type { BreakpointState } from './useBreakpoint';
