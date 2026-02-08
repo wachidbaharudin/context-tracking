@@ -195,12 +195,16 @@ export function ContextDetail({
         <TabsContent value="timesheet">
           {timesheetEnabled ? (
             <TimesheetList
+              contextId={context.id}
+              contextName={context.name}
               entries={timesheetEntries}
               activeTimerStart={activeTimerStart}
               onStart={startTimer}
               onStop={stopTimer}
               onUpdate={updateEntry}
               onDelete={deleteEntry}
+              doc={doc}
+              changeDoc={changeDoc}
             />
           ) : (
             <div className="w-full px-2 py-3 md:px-0 md:py-0">

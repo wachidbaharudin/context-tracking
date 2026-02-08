@@ -37,6 +37,15 @@ export interface TimesheetEntry {
   updatedAt: string;
 }
 
+export interface InvoiceSettings {
+  clientName?: string;
+  clientEmail?: string;
+  hourlyRate?: number;
+  currency?: string; // Default 'USD'
+  yourName?: string;
+  yourEmail?: string;
+}
+
 export interface Context {
   id: string;
   name: string;
@@ -48,6 +57,7 @@ export interface Context {
   timesheetEnabled?: boolean;
   timesheetEntries?: TimesheetEntry[];
   activeTimerStart?: string; // ISO datetime when timer was started, undefined when no timer running
+  invoiceSettings?: InvoiceSettings;
   createdAt: string;
   updatedAt: string;
 }

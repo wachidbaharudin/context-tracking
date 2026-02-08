@@ -8,3 +8,4 @@ export type { ActionItemWithContext } from './useAllActionItems';
 export { useBreakpoint } from './useBreakpoint';
 export type { BreakpointState } from './useBreakpoint';
 export { useTimesheet } from './useTimesheet';
+export { useInvoice } from './useInvoice';

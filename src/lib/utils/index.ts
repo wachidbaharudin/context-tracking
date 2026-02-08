@@ -25,3 +25,11 @@ export {
   formatDuration,
   formatTimeRange,
 } from './timesheetUtils';
+export {
+  filterEntriesByDateRange,
+  calculateInvoiceTotal,
+  formatCurrency,
+  generateInvoiceNumber,
+  formatInvoiceDate,
+  generateInvoicePDF,
+} from './invoiceUtils';
