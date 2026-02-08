@@ -28,6 +28,15 @@ export interface Link {
   addedAt: string;
 }
 
+export interface TimesheetEntry {
+  id: string;
+  startTime: string; // ISO datetime
+  endTime: string; // ISO datetime
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Context {
   id: string;
   name: string;
@@ -36,6 +45,9 @@ export interface Context {
   color?: string;
   actionItems: ActionItem[];
   links: Link[];
+  timesheetEnabled?: boolean;
+  timesheetEntries?: TimesheetEntry[];
+  activeTimerStart?: string; // ISO datetime when timer was started, undefined when no timer running
   createdAt: string;
   updatedAt: string;
 }

@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/Button';
 import { ActionItemList } from '@/components/features/action-items';
 import { LinkList } from '@/components/features/links';
-import { useActionItems, useLinks } from '@/hooks';
+import { TimesheetList } from '@/components/features/timesheet';
+import { useActionItems, useLinks, useTimesheet } from '@/hooks';
 import { cn, formatDate } from '@/lib/utils';
 import type { Context, AppDocument } from '@/types';
 
@@ -41,6 +42,21 @@ export function ContextDetail({
   });
 
   const { links, addLink, deleteLink } = useLinks({
+    contextId: context.id,
+    doc,
+    changeDoc,
+  });
+
+  const {
+    timesheetEnabled,
+    timesheetEntries,
+    activeTimerStart,
+    toggleTimesheet,
+    startTimer,
+    stopTimer,
+    updateEntry,
+    deleteEntry,
+  } = useTimesheet({
     contextId: context.id,
     doc,
     changeDoc,
@@ -157,6 +173,30 @@ export function ContextDetail({
         />
 
         <LinkList links={links} onAdd={addLink} onDelete={deleteLink} />
+
+        {/* Timesheet Section */}
+        {timesheetEnabled ? (
+          <TimesheetList
+            entries={timesheetEntries}
+            activeTimerStart={activeTimerStart}
+            onStart={startTimer}
+            onStop={stopTimer}
+            onUpdate={updateEntry}
+            onDelete={deleteEntry}
+          />
+        ) : (
+          <div className="w-full px-2 py-3 md:px-0 md:py-0">
+            <button
+              onClick={toggleTimesheet}
+              className="w-full flex items-center gap-3 p-4 text-left border-2 border-dashed border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <div>
+                <div className="text-sm font-medium text-gray-600">Enable timesheet tracking</div>
+                <div className="text-[11px] text-gray-400">Track time spent on this context</div>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

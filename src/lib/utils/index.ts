@@ -17,3 +17,11 @@ export {
   getPreviousWeek,
   getNextWeek,
 } from './calendarUtils';
+export {
+  calculateDuration,
+  getTotalHours,
+  getWeeklyHours,
+  getMonthlyHours,
+  formatDuration,
+  formatTimeRange,
+} from './timesheetUtils';
