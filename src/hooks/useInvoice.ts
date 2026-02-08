@@ -79,6 +79,7 @@ export function useInvoice({ contextId, doc, changeDoc }: UseInvoiceProps): UseI
           hourlyRate,
           currency,
         },
+        entries: filteredEntries,
       };
 
       generateInvoicePDF(invoiceData);

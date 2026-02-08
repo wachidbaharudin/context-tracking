@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import type { TimesheetEntry, InvoiceSettings } from '@/types';
+import { calculateDuration } from './timesheetUtils';
 
 /**
  * Filter timesheet entries by date range
@@ -89,6 +90,7 @@ interface InvoiceData {
   totalAmount: number;
   currency: string;
   settings: InvoiceSettings;
+  entries: TimesheetEntry[];
 }
 
 /**
@@ -163,27 +165,82 @@ export function generateInvoicePDF(data: InvoiceData): void {
   yPosition += 15;
 
   // Table header
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const bottomMargin = 30; // Reserve space for footer
+  const maxY = pageHeight - bottomMargin;
+
+  // Helper function to add page header when overflow occurs
+  const addPageHeader = () => {
+    yPosition = 20;
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, yPosition, pageWidth - 40, 10, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Date', 25, yPosition + 7);
+    doc.text('Description', 70, yPosition + 7);
+    doc.text('Hours', pageWidth - 60, yPosition + 7);
+    doc.text('Amount', pageWidth - 25, yPosition + 7, { align: 'right' });
+    yPosition += 10;
+  };
+
+  // Initial table header
   doc.setFillColor(240, 240, 240);
   doc.rect(20, yPosition, pageWidth - 40, 10, 'F');
-
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.text('Description', 25, yPosition + 7);
-  doc.text('Hours', pageWidth - 80, yPosition + 7);
-  doc.text('Rate', pageWidth - 60, yPosition + 7);
-  doc.text('Amount', pageWidth - 35, yPosition + 7, { align: 'right' });
+  doc.text('Date', 25, yPosition + 7);
+  doc.text('Description', 70, yPosition + 7);
+  doc.text('Hours', pageWidth - 60, yPosition + 7);
+  doc.text('Amount', pageWidth - 25, yPosition + 7, { align: 'right' });
   yPosition += 10;
 
-  // Table row
+  // Sort entries chronologically (oldest first)
+  const sortedEntries = [...data.entries].sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  );
+
+  // Table rows - itemized entries
   doc.setFont('helvetica', 'normal');
-  yPosition += 7;
-  doc.text(`Consulting Services - ${data.contextName}`, 25, yPosition);
-  doc.text(data.totalHours.toFixed(2), pageWidth - 80, yPosition);
-  doc.text(formatCurrency(data.hourlyRate, data.currency), pageWidth - 60, yPosition);
-  doc.text(formatCurrency(data.totalAmount, data.currency), pageWidth - 25, yPosition, {
-    align: 'right',
+  sortedEntries.forEach((entry) => {
+    // Check if we need a new page
+    if (yPosition + 10 > maxY) {
+      doc.addPage();
+      addPageHeader();
+    }
+
+    yPosition += 7;
+    const entryDate = new Date(entry.startTime);
+    const dateStr = entryDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    const hours = calculateDuration(entry.startTime, entry.endTime);
+    const amount = hours * data.hourlyRate;
+    const description = entry.description || 'No description';
+
+    // Truncate description if too long (max ~35 chars)
+    const maxDescLength = 35;
+    const truncatedDesc =
+      description.length > maxDescLength
+        ? description.substring(0, maxDescLength - 3) + '...'
+        : description;
+
+    doc.text(dateStr, 25, yPosition);
+    doc.text(truncatedDesc, 70, yPosition);
+    doc.text(hours.toFixed(2), pageWidth - 60, yPosition);
+    doc.text(formatCurrency(amount, data.currency), pageWidth - 25, yPosition, {
+      align: 'right',
+    });
   });
+
   yPosition += 10;
+
+  // Check if we need a new page for total
+  if (yPosition + 20 > maxY) {
+    doc.addPage();
+    yPosition = 20;
+  }
 
   // Divider line
   doc.setDrawColor(200, 200, 200);
