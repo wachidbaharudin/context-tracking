@@ -81,7 +81,7 @@ export function TimesheetTimer({
   // Idle state: Show Start button with description input
   if (!activeTimerStart) {
     return (
-      <div className="flex gap-2">
+      <div className="flex items-start gap-2">
         <textarea
           placeholder="What are you working on? (Shift+Enter for new line)"
           value={description}
@@ -90,9 +90,9 @@ export function TimesheetTimer({
           rows={1}
           className={cn(
             'flex flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3',
-            'text-base placeholder:text-gray-400 resize-none',
+            'text-base placeholder:text-gray-400 resize-none min-h-[44px]',
             'focus:outline-none focus:ring-2 focus:ring-blue-500',
-            'md:rounded-md md:px-3 md:py-2 md:text-sm'
+            'md:rounded-md md:px-3 md:py-2 md:text-sm md:min-h-[36px]'
           )}
         />
         <Button
@@ -100,7 +100,7 @@ export function TimesheetTimer({
           onClick={handleStartClick}
           variant="primary"
           size="sm"
-          className="min-h-[44px] text-base px-6 md:min-h-0 md:text-sm md:px-4"
+          className="h-[44px] shrink-0 text-base px-6 md:h-[36px] md:text-sm md:px-4"
         >
           ▶ Start
         </Button>

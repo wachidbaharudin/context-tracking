@@ -40,22 +40,22 @@ export function TimesheetRow({ entry, onDelete, onUpdate }: TimesheetRowProps) {
   return (
     <div
       className={cn(
-        'flex flex-col gap-2 p-3 rounded-md border border-gray-100 bg-white transition-colors group',
+        'flex flex-col gap-2.5 p-4 rounded-lg border border-gray-200 bg-white transition-all group',
         'min-h-[44px]',
-        'hover:border-gray-200'
+        'hover:border-gray-300 hover:shadow-sm'
       )}
     >
       {/* First line: time range, duration badge, and delete button */}
       <div className="flex items-center gap-3">
         <div className="flex-1 min-w-0">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-semibold text-gray-900">
             {formatTimeRange(entry.startTime, entry.endTime)}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {/* Duration badge */}
-          <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+          <span className="px-2.5 py-1 text-xs font-semibold bg-blue-50 text-blue-700 rounded-md">
             {formatDuration(duration)}
           </span>
 
@@ -114,10 +114,10 @@ export function TimesheetRow({ entry, onDelete, onUpdate }: TimesheetRowProps) {
         </div>
       ) : entry.description ? (
         <div className="flex items-start gap-2">
-          <p className="flex-1 text-[11px] text-gray-500">{entry.description}</p>
+          <p className="flex-1 text-sm text-gray-600 leading-relaxed">{entry.description}</p>
           <button
             onClick={() => setIsEditingDescription(true)}
-            className="text-[11px] text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="text-xs text-blue-600 hover:text-blue-700 hover:underline font-medium opacity-0 group-hover:opacity-100 transition-opacity"
           >
             Edit
           </button>
@@ -125,7 +125,7 @@ export function TimesheetRow({ entry, onDelete, onUpdate }: TimesheetRowProps) {
       ) : (
         <button
           onClick={() => setIsEditingDescription(true)}
-          className="text-[11px] text-gray-400 hover:text-gray-600 text-left"
+          className="text-xs text-gray-400 hover:text-blue-600 text-left"
         >
           + Add description
         </button>
